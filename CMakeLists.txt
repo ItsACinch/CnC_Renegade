@@ -173,6 +173,40 @@ if(BUILD_TESTS)
 endif()
 
 # =============================================================================
+# Runtime DLL Dependencies
+# =============================================================================
+# TODO: Automate copying of runtime DLL dependencies to the output directory.
+#
+# Currently, users must manually download and copy these DLLs:
+#
+# 1. OpenAL Soft (Audio):
+#    - Download from: https://openal-soft.org/openal-binaries/
+#    - Copy soft_oal.dll as OpenAL32.dll to Run/
+#
+# 2. FFmpeg (Video):
+#    - Download from: https://www.gyan.dev/ffmpeg/builds/ (shared build)
+#    - Copy avcodec-XX.dll, avformat-XX.dll, avutil-XX.dll, swscale-XX.dll to Run/
+#
+# Future improvements:
+# - Use FetchContent or ExternalProject to download OpenAL and FFmpeg during configure
+# - Use find_package() with custom Find modules to locate installed libraries
+# - Add post-build commands to copy DLLs automatically:
+#   add_custom_command(TARGET renegade POST_BUILD
+#       COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#       "${OPENAL_DLL}" "$<TARGET_FILE_DIR:renegade>"
+#   )
+# - Consider using CPack to bundle DLLs with the game for distribution
+# - Alternatively, use vcpkg or conan for dependency management
+#
+# Example FetchContent approach (untested):
+# include(FetchContent)
+# FetchContent_Declare(
+#     openal-soft
+#     URL https://openal-soft.org/openal-binaries/openal-soft-1.23.1-bin.zip
+# )
+# FetchContent_MakeAvailable(openal-soft)
+
+# =============================================================================
 # Installation (future)
 # =============================================================================
 

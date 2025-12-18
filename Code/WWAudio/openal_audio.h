@@ -270,6 +270,24 @@ typedef struct {
 // Parse WAV header and get sound info
 OAL_S32 OAL_WAV_Info(void* file_data, OAL_SoundInfo* info);
 
+// ============================================================================
+// File I/O Callbacks (for virtual file system support)
+// ============================================================================
+
+// File callback types (compatible with Miles - must use __stdcall)
+typedef OAL_U32 (__stdcall *OAL_FILE_OPEN_CB)(const char* filename, OAL_U32* file_handle);
+typedef void    (__stdcall *OAL_FILE_CLOSE_CB)(OAL_U32 file_handle);
+typedef OAL_S32 (__stdcall *OAL_FILE_SEEK_CB)(OAL_U32 file_handle, OAL_S32 offset, OAL_U32 type);
+typedef OAL_U32 (__stdcall *OAL_FILE_READ_CB)(OAL_U32 file_handle, void* buffer, OAL_U32 bytes);
+
+// Set file callbacks for virtual file system access
+void OAL_Set_File_Callbacks(
+    OAL_FILE_OPEN_CB open_cb,
+    OAL_FILE_CLOSE_CB close_cb,
+    OAL_FILE_SEEK_CB seek_cb,
+    OAL_FILE_READ_CB read_cb
+);
+
 #ifdef __cplusplus
 }
 #endif

@@ -622,7 +622,13 @@ inline void AIL_set_file_callbacks(
     AIL_file_close_callback close_cb,
     AIL_file_seek_callback seek_cb,
     AIL_file_read_callback read_cb) {
-    (void)open_cb; (void)close_cb; (void)seek_cb; (void)read_cb;
+    // Hook up file callbacks to OpenAL backend for MIX archive support
+    OAL_Set_File_Callbacks(
+        (OAL_FILE_OPEN_CB)open_cb,
+        (OAL_FILE_CLOSE_CB)close_cb,
+        (OAL_FILE_SEEK_CB)seek_cb,
+        (OAL_FILE_READ_CB)read_cb
+    );
 }
 
 #endif // MSS_H

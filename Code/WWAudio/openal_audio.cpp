@@ -177,6 +177,12 @@ static char g_LastError[256] = "No error";
 static OAL_S32 g_MasterVolume = 127;
 static OAL_S32 g_SpeakerType = OAL_SPEAKER_2;
 
+// File I/O callbacks for virtual file system support (MIX archives, etc.)
+static OAL_FILE_OPEN_CB g_FileOpen = NULL;
+static OAL_FILE_CLOSE_CB g_FileClose = NULL;
+static OAL_FILE_SEEK_CB g_FileSeek = NULL;
+static OAL_FILE_READ_CB g_FileRead = NULL;
+
 // Maximum samples/streams
 #define MAX_SAMPLES     64
 #define MAX_3D_SAMPLES  64
@@ -223,7 +229,9 @@ struct OAL_Sample3D {
 struct OAL_Stream {
     ALuint source;
     ALuint buffers[STREAM_BUFFER_COUNT];
-    FILE* file;
+    FILE* file;           // Used when no file callbacks set
+    OAL_U32 file_handle;  // Used when file callbacks are set
+    int use_callbacks;    // 1 if using file callbacks, 0 if using FILE*
     int in_use;
     int status;
     int paused;
@@ -973,11 +981,69 @@ void OAL_Set_Rolloff_Factor(OAL_F32 factor) {
 }
 
 // ============================================================================
-// Streaming Functions
+// File Callback Support
 // ============================================================================
 
+void OAL_Set_File_Callbacks(
+    OAL_FILE_OPEN_CB open_cb,
+    OAL_FILE_CLOSE_CB close_cb,
+    OAL_FILE_SEEK_CB seek_cb,
+    OAL_FILE_READ_CB read_cb)
+{
+    g_FileOpen = open_cb;
+    g_FileClose = close_cb;
+    g_FileSeek = seek_cb;
+    g_FileRead = read_cb;
+}
+
+// Helper: Read from stream (using callbacks or FILE*)
+static OAL_U32 Stream_Read(OAL_Stream* stream, void* buffer, OAL_U32 bytes) {
+    if (!stream || !buffer || bytes == 0) return 0;
+
+    if (stream->use_callbacks && g_FileRead) {
+        return g_FileRead(stream->file_handle, buffer, bytes);
+    } else if (stream->file) {
+        return (OAL_U32)fread(buffer, 1, bytes, stream->file);
+    }
+    return 0;
+}
+
+// Helper: Seek in stream (using callbacks or FILE*)
+static OAL_S32 Stream_Seek(OAL_Stream* stream, OAL_S32 offset, OAL_U32 origin) {
+    if (!stream) return -1;
+
+    if (stream->use_callbacks && g_FileSeek) {
+        return g_FileSeek(stream->file_handle, offset, origin);
+    } else if (stream->file) {
+        return fseek(stream->file, offset, origin);
+    }
+    return -1;
+}
+
+// Helper: Close stream file (using callbacks or FILE*)
+static void Stream_Close_File(OAL_Stream* stream) {
+    if (!stream) return;
+
+    if (stream->use_callbacks && g_FileClose) {
+        g_FileClose(stream->file_handle);
+        stream->file_handle = 0;
+    } else if (stream->file) {
+        fclose(stream->file);
+        stream->file = NULL;
+    }
+}
+
+// ============================================================================
+// Streaming Functions
+// ============================================================================
+// TODO: Streaming audio (music) is not working. The file callback system
+// appears to work but music doesn't play. Possible issues:
+// - Music files may not be WAV format (could be MP3 or other compressed format)
+// - File callbacks may need additional debugging
+// - Stream buffering/playback timing may need adjustment
+
 OAL_Stream* OAL_Open_Stream(const char* filename) {
-    if (!g_Initialized || !filename) return NULL;
+    if (!g_Initialized || !filename || filename[0] == '\0') return NULL;
 
     // Find free stream slot
     OAL_Stream* stream = NULL;
@@ -992,75 +1058,117 @@ OAL_Stream* OAL_Open_Stream(const char* filename) {
 
     memset(stream, 0, sizeof(OAL_Stream));
 
-    // Open file
-    stream->file = fopen(filename, "rb");
-    if (!stream->file) {
-        return NULL;
+    // Try to open file using callbacks first (for MIX archive support)
+    if (g_FileOpen && g_FileRead && g_FileSeek && g_FileClose) {
+        OAL_U32 handle = 0;
+        OAL_U32 result = g_FileOpen(filename, &handle);
+        if (result && handle != 0) {
+            stream->file_handle = handle;
+            stream->use_callbacks = 1;
+        }
+    }
+
+    // Fall back to direct file access
+    if (!stream->use_callbacks) {
+        stream->file = fopen(filename, "rb");
+        if (!stream->file) {
+            return NULL;
+        }
     }
 
     // Parse WAV header
     char riff[4];
-    fread(riff, 1, 4, stream->file);
-    if (memcmp(riff, "RIFF", 4) != 0) {
-        fclose(stream->file);
+    if (Stream_Read(stream, riff, 4) != 4 || memcmp(riff, "RIFF", 4) != 0) {
+        Stream_Close_File(stream);
         return NULL;
     }
 
-    fseek(stream->file, 4, SEEK_CUR); // Skip file size
+    Stream_Seek(stream, 4, SEEK_CUR); // Skip file size
 
     char wave[4];
-    fread(wave, 1, 4, stream->file);
-    if (memcmp(wave, "WAVE", 4) != 0) {
-        fclose(stream->file);
+    if (Stream_Read(stream, wave, 4) != 4 || memcmp(wave, "WAVE", 4) != 0) {
+        Stream_Close_File(stream);
         return NULL;
     }
 
-    // Find fmt chunk
-    while (!feof(stream->file)) {
+    // Find fmt and data chunks
+    int fmt_found = 0, data_found = 0;
+    long current_pos = 12; // After RIFF header
+    int max_iterations = 100; // Prevent infinite loop on malformed files
+
+    while ((!fmt_found || !data_found) && max_iterations-- > 0) {
         char chunk_id[4];
         unsigned int chunk_size;
 
-        if (fread(chunk_id, 1, 4, stream->file) != 4) break;
-        if (fread(&chunk_size, 4, 1, stream->file) != 1) break;
+        if (Stream_Read(stream, chunk_id, 4) != 4) break;
+        if (Stream_Read(stream, &chunk_size, 4) != 4) break;
+        current_pos += 8;
+
+        // Sanity check chunk size (max 100MB per chunk)
+        if (chunk_size > 100 * 1024 * 1024) break;
 
         if (memcmp(chunk_id, "fmt ", 4) == 0) {
             unsigned short format, channels, bits;
             unsigned int rate;
 
-            fread(&format, 2, 1, stream->file);
-            fread(&channels, 2, 1, stream->file);
-            fread(&rate, 4, 1, stream->file);
-            fseek(stream->file, 6, SEEK_CUR); // Skip byte rate and block align
-            fread(&bits, 2, 1, stream->file);
+            if (chunk_size < 16) break; // fmt chunk too small
+
+            Stream_Read(stream, &format, 2);
+            Stream_Read(stream, &channels, 2);
+            Stream_Read(stream, &rate, 4);
+            Stream_Seek(stream, 6, SEEK_CUR); // Skip byte rate and block align
+            Stream_Read(stream, &bits, 2);
 
             stream->format = format;
             stream->channels = channels;
             stream->rate = rate;
             stream->bits = bits;
+            fmt_found = 1;
 
             // Skip rest of fmt chunk
             if (chunk_size > 16) {
-                fseek(stream->file, chunk_size - 16, SEEK_CUR);
+                Stream_Seek(stream, chunk_size - 16, SEEK_CUR);
             }
+            current_pos += chunk_size;
         }
         else if (memcmp(chunk_id, "data", 4) == 0) {
-            stream->data_start = ftell(stream->file);
+            stream->data_start = current_pos;
             stream->data_size = chunk_size;
-            break;
+            data_found = 1;
+            // Don't skip past data - we'll read from here
         }
         else {
-            fseek(stream->file, chunk_size, SEEK_CUR);
+            Stream_Seek(stream, chunk_size, SEEK_CUR);
+            current_pos += chunk_size;
         }
     }
 
-    if (stream->data_size == 0) {
-        fclose(stream->file);
+    if (!fmt_found || !data_found || stream->data_size == 0) {
+        Stream_Close_File(stream);
+        return NULL;
+    }
+
+    // Validate format
+    if (stream->channels < 1 || stream->channels > 2 ||
+        (stream->bits != 8 && stream->bits != 16) ||
+        stream->rate < 1000 || stream->rate > 96000) {
+        Stream_Close_File(stream);
         return NULL;
     }
 
     // Create source and buffers
     g_AL.alGenSources(1, &stream->source);
+    if (g_AL.alGetError() != AL_NO_ERROR) {
+        Stream_Close_File(stream);
+        return NULL;
+    }
+
     g_AL.alGenBuffers(STREAM_BUFFER_COUNT, stream->buffers);
+    if (g_AL.alGetError() != AL_NO_ERROR) {
+        g_AL.alDeleteSources(1, &stream->source);
+        Stream_Close_File(stream);
+        return NULL;
+    }
 
     stream->in_use = 1;
     stream->status = OAL_SMP_DONE;
@@ -1073,8 +1181,10 @@ OAL_Stream* OAL_Open_Stream(const char* filename) {
     stream->data_pos = 0;
 
     int bytes_per_sample = (stream->bits / 8) * stream->channels;
-    int samples = stream->data_size / bytes_per_sample;
-    stream->total_ms = (samples * 1000) / stream->rate;
+    if (bytes_per_sample > 0) {
+        int samples = stream->data_size / bytes_per_sample;
+        stream->total_ms = (samples * 1000) / stream->rate;
+    }
 
     // Make source relative for 2D playback
     g_AL.alSourcei(stream->source, AL_SOURCE_RELATIVE, AL_TRUE);
@@ -1099,20 +1209,23 @@ void OAL_Close_Stream(OAL_Stream* stream) {
     g_AL.alDeleteSources(1, &stream->source);
     g_AL.alDeleteBuffers(STREAM_BUFFER_COUNT, stream->buffers);
 
-    if (stream->file) {
-        fclose(stream->file);
-    }
+    Stream_Close_File(stream);
 
     memset(stream, 0, sizeof(OAL_Stream));
 }
 
+// Static buffer for streaming to avoid stack issues
+static char g_StreamBuffer[STREAM_BUFFER_SIZE];
+
 void OAL_Start_Stream(OAL_Stream* stream) {
     if (!stream || !stream->in_use) return;
+    if (stream->source == 0) return;
+    if (stream->rate <= 0 || stream->base_rate <= 0) return;
 
     // Reset position
     stream->data_pos = 0;
     stream->loops_remaining = stream->loop_count;
-    fseek(stream->file, stream->data_start, SEEK_SET);
+    Stream_Seek(stream, stream->data_start, SEEK_SET);
 
     // Apply settings
     g_AL.alSourcef(stream->source, AL_GAIN, VolumeToGain(stream->volume));
@@ -1120,7 +1233,6 @@ void OAL_Start_Stream(OAL_Stream* stream) {
     g_AL.alSourcef(stream->source, AL_PITCH, (float)stream->playback_rate / stream->base_rate);
 
     // Fill initial buffers
-    char buffer_data[STREAM_BUFFER_SIZE];
     ALenum format = GetALFormat(stream->channels, stream->bits);
 
     for (int i = 0; i < STREAM_BUFFER_COUNT; i++) {
@@ -1130,11 +1242,12 @@ void OAL_Start_Stream(OAL_Stream* stream) {
         }
 
         if (bytes_to_read > 0) {
-            size_t bytes_read = fread(buffer_data, 1, bytes_to_read, stream->file);
-            stream->data_pos += bytes_read;
-
-            g_AL.alBufferData(stream->buffers[i], format, buffer_data, (ALint)bytes_read, stream->rate);
-            g_AL.alSourceQueueBuffers(stream->source, 1, &stream->buffers[i]);
+            size_t bytes_read = Stream_Read(stream, g_StreamBuffer, (OAL_U32)bytes_to_read);
+            if (bytes_read > 0) {
+                stream->data_pos += bytes_read;
+                g_AL.alBufferData(stream->buffers[i], format, g_StreamBuffer, (ALint)bytes_read, stream->rate);
+                g_AL.alSourceQueueBuffers(stream->source, 1, &stream->buffers[i]);
+            }
         }
     }
 
@@ -1220,7 +1333,7 @@ void OAL_Set_Stream_MS_Position(OAL_Stream* stream, OAL_S32 ms) {
     if (byte_pos > stream->data_size) byte_pos = stream->data_size;
 
     stream->data_pos = byte_pos;
-    fseek(stream->file, stream->data_start + byte_pos, SEEK_SET);
+    Stream_Seek(stream, stream->data_start + byte_pos, SEEK_SET);
 }
 
 void OAL_Stream_MS_Position(OAL_Stream* stream, OAL_S32* total, OAL_S32* current) {
@@ -1267,11 +1380,11 @@ OAL_S32 OAL_Stream_User_Data(OAL_Stream* stream, OAL_U32 index) {
 void OAL_Service_Stream(OAL_Stream* stream) {
     if (!stream || !stream->in_use || stream->paused) return;
     if (stream->status != OAL_SMP_PLAYING) return;
+    if (stream->source == 0) return;
 
     ALint processed = 0;
     g_AL.alGetSourcei(stream->source, AL_BUFFERS_PROCESSED, &processed);
 
-    char buffer_data[STREAM_BUFFER_SIZE];
     ALenum format = GetALFormat(stream->channels, stream->bits);
 
     while (processed > 0) {
@@ -1287,7 +1400,7 @@ void OAL_Service_Stream(OAL_Stream* stream) {
                 // Loop
                 if (stream->loops_remaining > 0) stream->loops_remaining--;
                 stream->data_pos = 0;
-                fseek(stream->file, stream->data_start, SEEK_SET);
+                Stream_Seek(stream, stream->data_start, SEEK_SET);
                 remaining = stream->data_size;
             } else {
                 // Done
@@ -1300,10 +1413,10 @@ void OAL_Service_Stream(OAL_Stream* stream) {
             bytes_to_read = remaining;
         }
 
-        size_t bytes_read = fread(buffer_data, 1, bytes_to_read, stream->file);
+        size_t bytes_read = Stream_Read(stream, g_StreamBuffer, (OAL_U32)bytes_to_read);
         if (bytes_read > 0) {
             stream->data_pos += bytes_read;
-            g_AL.alBufferData(buffer, format, buffer_data, (ALint)bytes_read, stream->rate);
+            g_AL.alBufferData(buffer, format, g_StreamBuffer, (ALint)bytes_read, stream->rate);
             g_AL.alSourceQueueBuffers(stream->source, 1, &buffer);
         }
 

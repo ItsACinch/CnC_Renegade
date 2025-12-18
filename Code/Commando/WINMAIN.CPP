@@ -81,6 +81,7 @@
 #include "slavemaster.h"
 
 #include "serversettings.h"
+#include "diaglog.h"
 
 #ifdef _DEBUG
 #include	<crtdbg.h>
@@ -113,7 +114,7 @@ extern "C"
 //	Local functions
 //----------------------------------------------------------------------------
 static BOOL Create_Main_Window(HANDLE hInstance, int nCmdShow);
-long FAR PASCAL Main_Window_Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK Main_Window_Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 void On_Focus_Loss(void);
 void On_Focus_Restore(void);
 void Split_Command_Line_Args(HINSTANCE instance, char *path_to_exe, char *command_line);
@@ -149,7 +150,25 @@ long Top_Level_Exception_Filter(EXCEPTION_POINTERS *e_info)
  *=============================================================================================*/
 int PASCAL WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
+	// Very early diagnostic logging - write directly to file before any other initialization
+	{
+		char path[MAX_PATH];
+		if (GetTempPathA(MAX_PATH, path)) {
+			strcat(path, "renegade_diag.txt");
+		} else {
+			strcpy(path, "renegade_diag.txt");
+		}
+		FILE* f = fopen(path, "w");  // "w" to overwrite on each launch
+		if (f) {
+			fprintf(f, "=== WinMain entered ===\n");
+			fflush(f);
+			fclose(f);
+		}
+		OutputDebugStringA("=== Renegade WinMain entered ===\n");
+	}
+
 	WWMemoryLogClass::Init();	// This switches memlog from static to dynamic allocations mode
+	DiagLogClass::Log_Early("WWMemoryLogClass::Init() complete");
 
 #ifdef _DEBUG
 	/*
@@ -194,9 +213,11 @@ int PASCAL WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	}
 #endif // WWDEBUG
 
+	DiagLogClass::Log_Early("About to parse command line");
    if (!cUserOptions::Parse_Command_Line(lpCmdLine)) {
 		return(0);
 	}
+	DiagLogClass::Log_Early("Command line parsed");
 
 	//
 	// There's a couple of options we need for the FDS
@@ -506,7 +527,7 @@ int Start_Application( HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /
  * HISTORY:                                                                                    *
  *   07/18/1997 GH  : Created.                                                                 *
  *=============================================================================================*/
-long FAR PASCAL Main_Window_Proc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
+LRESULT CALLBACK Main_Window_Proc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	static bool _reset = false;
 

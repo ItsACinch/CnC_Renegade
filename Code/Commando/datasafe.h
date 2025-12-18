@@ -562,6 +562,11 @@ class GenericDataSafeClass
 		static void Set_Preferred_Thread(unsigned int thread_id) {PreferredThread = thread_id;};
 #endif //THREAD_SAFE_DATA_SAFE
 
+		/*
+		** Global counter for unique type codes (x64 fix - can't use address truncation)
+		*/
+		static unsigned long NextTypeCode;
+
 	protected:
 
 		/*
@@ -1379,20 +1384,20 @@ unsigned long DataSafeClass<T>::Get_Type_Code(void)
 
 	/*
 	** Since we aren't using RTTI I need some other way of distinguishing types in the safe. Because it's templatised, this
-	** code will get expanded once for each type it's used with. I will use the location in memory of the function to
-	** uniquely identify each type. What a cunning plan.
+	** code will get expanded once for each type it's used with. Each template instantiation gets its own static variable
+	** with a unique ID assigned on first call.
+	**
+	** Note: On x64, we can't use raw addresses as 32-bit type codes due to truncation causing collisions.
+	** Instead, we use a global counter (in base class) to assign unique IDs to each template instantiation.
 	*/
-	static unsigned long instruction_pointer;
-	instruction_pointer = 0;
-	__asm {
-here:
-		lea	eax,here
-		mov	[instruction_pointer],eax
-	};
+	static unsigned long type_id = 0;
+	if (type_id == 0) {
+		type_id = NextTypeCode++;  // Use global counter from GenericDataSafeClass
+	}
 
-	ds_assert(instruction_pointer != 0);
+	ds_assert(type_id != 0);
 
-	return(instruction_pointer);
+	return(type_id);
 }
 
 

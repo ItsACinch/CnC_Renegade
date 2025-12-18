@@ -41,26 +41,33 @@
 #ifndef BITTYPE_H
 #define BITTYPE_H
 
-typedef unsigned char	uint8;
-typedef unsigned short	uint16;
-typedef unsigned long	uint32;
+#include <stdint.h>
+
+// Include Windows headers for BYTE, WORD, DWORD, UINT, ULONG, BOOL, etc.
+// This ensures consistent include ordering and no conflicts.
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+
+// Fixed-width integer types (portable across 32-bit and 64-bit)
+typedef uint8_t         uint8;
+typedef uint16_t        uint16;
+typedef uint32_t        uint32;
+typedef uint64_t        uint64;
 typedef unsigned int    uint;
 
-typedef signed char		sint8;
-typedef signed short		sint16;
-typedef signed long		sint32;
+typedef int8_t          sint8;
+typedef int16_t         sint16;
+typedef int32_t         sint32;
+typedef int64_t         sint64;
 typedef signed int      sint;
 
-typedef float				float32;
-typedef double				float64;
+// Pointer-sized integer types (for pointer arithmetic and casting)
+typedef uintptr_t       uintptr;
+typedef intptr_t        sintptr;
 
-typedef unsigned long   DWORD;
-typedef unsigned short	WORD;
-typedef unsigned char   BYTE;
-typedef int             BOOL;
-typedef unsigned short	USHORT;
-typedef const char *		LPCSTR;
-typedef unsigned int    UINT;
-typedef unsigned long   ULONG;
+typedef float           float32;
+typedef double          float64;
 
 #endif //BITTYPE_H

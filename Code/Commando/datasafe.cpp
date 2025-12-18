@@ -81,6 +81,7 @@
 unsigned long GenericDataSafeClass::SimpleKey;
 unsigned long GenericDataSafeClass::HandleKey;
 unsigned long GenericDataSafeClass::Checksum;
+unsigned long GenericDataSafeClass::NextTypeCode = 1;  // Global counter for type codes (x64 fix)
 unsigned long GenericDataSafeClass::ShuffleDelay;
 unsigned long GenericDataSafeClass::SecurityCheckDelay;
 DataSafeHandleClass GenericDataSafeClass::SentinelOne = 0;

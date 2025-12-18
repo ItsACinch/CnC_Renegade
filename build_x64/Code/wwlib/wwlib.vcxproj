@@ -1,0 +1,515 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Profile|x64">
+      <Configuration>Profile</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{000F12FD-E210-3096-8F49-F699C102189B}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>wwlib</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\repos\FunNGames\CnC_Renegade\Code\Libs\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">wwlib.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">wwlib</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\repos\FunNGames\CnC_Renegade\Code\Libs\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">wwlib.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">wwlib</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">D:\repos\FunNGames\CnC_Renegade\Code\Libs\Profile\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">wwlib.dir\Profile\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">wwlib</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\repos\FunNGames\CnC_Renegade\Code\compat;D:\repos\FunNGames\CnC_Renegade\Code;D:\repos\FunNGames\CnC_Renegade\Code\wwdebug;D:\repos\FunNGames\CnC_Renegade\Code\wwlib;D:\repos\FunNGames\CnC_Renegade\Code\WWMath;D:\repos\FunNGames\CnC_Renegade\Code\ww3d2;D:\repos\FunNGames\CnC_Renegade\Code\wwphys;D:\repos\FunNGames\CnC_Renegade\Code\wwnet;D:\repos\FunNGames\CnC_Renegade\Code\wwsaveload;D:\repos\FunNGames\CnC_Renegade\Code\wwtranslatedb;D:\repos\FunNGames\CnC_Renegade\Code\wwbitpack;D:\repos\FunNGames\CnC_Renegade\Code\wwui;D:\repos\FunNGames\CnC_Renegade\Code\WWAudio;D:\repos\FunNGames\CnC_Renegade\Code\wwutil;D:\repos\FunNGames\CnC_Renegade\Code\BinkMovie;D:\repos\FunNGames\CnC_Renegade\Code\SControl;D:\repos\FunNGames\CnC_Renegade\Code\BandTest;D:\repos\FunNGames\CnC_Renegade\Code\Combat;D:\repos\FunNGames\CnC_Renegade\Code\Commando;D:\repos\FunNGames\CnC_Renegade\Code\Scripts;D:\repos\FunNGames\CnC_Renegade\Code\GameSpy;D:\repos\FunNGames\CnC_Renegade\Code\wolapi;D:\repos\FunNGames\CnC_Renegade\Code\WWOnline;D:\repos\FunNGames\CnC_Renegade\DirectX-SDK-June2010-master\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:twoPhase-</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <ConformanceMode>false</ConformanceMode>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4996;4244;4267;4018;4305;4800;4838;4101;4102;4146;4477;4312;4311;4302</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_MBCS;REGEX_MALLOC;STDC_HEADERS;WINVER=0x0601;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;_DEBUG;WWDEBUG;WIN64;_WIN64;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;_MBCS;REGEX_MALLOC;STDC_HEADERS;WINVER=0x0601;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;WWDEBUG;WIN64;_WIN64;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\repos\FunNGames\CnC_Renegade\Code\compat;D:\repos\FunNGames\CnC_Renegade\Code;D:\repos\FunNGames\CnC_Renegade\Code\wwdebug;D:\repos\FunNGames\CnC_Renegade\Code\wwlib;D:\repos\FunNGames\CnC_Renegade\Code\WWMath;D:\repos\FunNGames\CnC_Renegade\Code\ww3d2;D:\repos\FunNGames\CnC_Renegade\Code\wwphys;D:\repos\FunNGames\CnC_Renegade\Code\wwnet;D:\repos\FunNGames\CnC_Renegade\Code\wwsaveload;D:\repos\FunNGames\CnC_Renegade\Code\wwtranslatedb;D:\repos\FunNGames\CnC_Renegade\Code\wwbitpack;D:\repos\FunNGames\CnC_Renegade\Code\wwui;D:\repos\FunNGames\CnC_Renegade\Code\WWAudio;D:\repos\FunNGames\CnC_Renegade\Code\wwutil;D:\repos\FunNGames\CnC_Renegade\Code\BinkMovie;D:\repos\FunNGames\CnC_Renegade\Code\SControl;D:\repos\FunNGames\CnC_Renegade\Code\BandTest;D:\repos\FunNGames\CnC_Renegade\Code\Combat;D:\repos\FunNGames\CnC_Renegade\Code\Commando;D:\repos\FunNGames\CnC_Renegade\Code\Scripts;D:\repos\FunNGames\CnC_Renegade\Code\GameSpy;D:\repos\FunNGames\CnC_Renegade\Code\wolapi;D:\repos\FunNGames\CnC_Renegade\Code\WWOnline;D:\repos\FunNGames\CnC_Renegade\DirectX-SDK-June2010-master\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\repos\FunNGames\CnC_Renegade\Code\compat;D:\repos\FunNGames\CnC_Renegade\Code;D:\repos\FunNGames\CnC_Renegade\Code\wwdebug;D:\repos\FunNGames\CnC_Renegade\Code\wwlib;D:\repos\FunNGames\CnC_Renegade\Code\WWMath;D:\repos\FunNGames\CnC_Renegade\Code\ww3d2;D:\repos\FunNGames\CnC_Renegade\Code\wwphys;D:\repos\FunNGames\CnC_Renegade\Code\wwnet;D:\repos\FunNGames\CnC_Renegade\Code\wwsaveload;D:\repos\FunNGames\CnC_Renegade\Code\wwtranslatedb;D:\repos\FunNGames\CnC_Renegade\Code\wwbitpack;D:\repos\FunNGames\CnC_Renegade\Code\wwui;D:\repos\FunNGames\CnC_Renegade\Code\WWAudio;D:\repos\FunNGames\CnC_Renegade\Code\wwutil;D:\repos\FunNGames\CnC_Renegade\Code\BinkMovie;D:\repos\FunNGames\CnC_Renegade\Code\SControl;D:\repos\FunNGames\CnC_Renegade\Code\BandTest;D:\repos\FunNGames\CnC_Renegade\Code\Combat;D:\repos\FunNGames\CnC_Renegade\Code\Commando;D:\repos\FunNGames\CnC_Renegade\Code\Scripts;D:\repos\FunNGames\CnC_Renegade\Code\GameSpy;D:\repos\FunNGames\CnC_Renegade\Code\wolapi;D:\repos\FunNGames\CnC_Renegade\Code\WWOnline;D:\repos\FunNGames\CnC_Renegade\DirectX-SDK-June2010-master\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\repos\FunNGames\CnC_Renegade\Code\compat;D:\repos\FunNGames\CnC_Renegade\Code;D:\repos\FunNGames\CnC_Renegade\Code\wwdebug;D:\repos\FunNGames\CnC_Renegade\Code\wwlib;D:\repos\FunNGames\CnC_Renegade\Code\WWMath;D:\repos\FunNGames\CnC_Renegade\Code\ww3d2;D:\repos\FunNGames\CnC_Renegade\Code\wwphys;D:\repos\FunNGames\CnC_Renegade\Code\wwnet;D:\repos\FunNGames\CnC_Renegade\Code\wwsaveload;D:\repos\FunNGames\CnC_Renegade\Code\wwtranslatedb;D:\repos\FunNGames\CnC_Renegade\Code\wwbitpack;D:\repos\FunNGames\CnC_Renegade\Code\wwui;D:\repos\FunNGames\CnC_Renegade\Code\WWAudio;D:\repos\FunNGames\CnC_Renegade\Code\wwutil;D:\repos\FunNGames\CnC_Renegade\Code\BinkMovie;D:\repos\FunNGames\CnC_Renegade\Code\SControl;D:\repos\FunNGames\CnC_Renegade\Code\BandTest;D:\repos\FunNGames\CnC_Renegade\Code\Combat;D:\repos\FunNGames\CnC_Renegade\Code\Commando;D:\repos\FunNGames\CnC_Renegade\Code\Scripts;D:\repos\FunNGames\CnC_Renegade\Code\GameSpy;D:\repos\FunNGames\CnC_Renegade\Code\wolapi;D:\repos\FunNGames\CnC_Renegade\Code\WWOnline;D:\repos\FunNGames\CnC_Renegade\DirectX-SDK-June2010-master\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:twoPhase-</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ConformanceMode>false</ConformanceMode>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4996;4244;4267;4018;4305;4800;4838;4101;4102;4146;4477;4312;4311;4302</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_MBCS;REGEX_MALLOC;STDC_HEADERS;WINVER=0x0601;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;WIN64;_WIN64;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_MBCS;REGEX_MALLOC;STDC_HEADERS;WINVER=0x0601;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;WIN64;_WIN64;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\repos\FunNGames\CnC_Renegade\Code\compat;D:\repos\FunNGames\CnC_Renegade\Code;D:\repos\FunNGames\CnC_Renegade\Code\wwdebug;D:\repos\FunNGames\CnC_Renegade\Code\wwlib;D:\repos\FunNGames\CnC_Renegade\Code\WWMath;D:\repos\FunNGames\CnC_Renegade\Code\ww3d2;D:\repos\FunNGames\CnC_Renegade\Code\wwphys;D:\repos\FunNGames\CnC_Renegade\Code\wwnet;D:\repos\FunNGames\CnC_Renegade\Code\wwsaveload;D:\repos\FunNGames\CnC_Renegade\Code\wwtranslatedb;D:\repos\FunNGames\CnC_Renegade\Code\wwbitpack;D:\repos\FunNGames\CnC_Renegade\Code\wwui;D:\repos\FunNGames\CnC_Renegade\Code\WWAudio;D:\repos\FunNGames\CnC_Renegade\Code\wwutil;D:\repos\FunNGames\CnC_Renegade\Code\BinkMovie;D:\repos\FunNGames\CnC_Renegade\Code\SControl;D:\repos\FunNGames\CnC_Renegade\Code\BandTest;D:\repos\FunNGames\CnC_Renegade\Code\Combat;D:\repos\FunNGames\CnC_Renegade\Code\Commando;D:\repos\FunNGames\CnC_Renegade\Code\Scripts;D:\repos\FunNGames\CnC_Renegade\Code\GameSpy;D:\repos\FunNGames\CnC_Renegade\Code\wolapi;D:\repos\FunNGames\CnC_Renegade\Code\WWOnline;D:\repos\FunNGames\CnC_Renegade\DirectX-SDK-June2010-master\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\repos\FunNGames\CnC_Renegade\Code\compat;D:\repos\FunNGames\CnC_Renegade\Code;D:\repos\FunNGames\CnC_Renegade\Code\wwdebug;D:\repos\FunNGames\CnC_Renegade\Code\wwlib;D:\repos\FunNGames\CnC_Renegade\Code\WWMath;D:\repos\FunNGames\CnC_Renegade\Code\ww3d2;D:\repos\FunNGames\CnC_Renegade\Code\wwphys;D:\repos\FunNGames\CnC_Renegade\Code\wwnet;D:\repos\FunNGames\CnC_Renegade\Code\wwsaveload;D:\repos\FunNGames\CnC_Renegade\Code\wwtranslatedb;D:\repos\FunNGames\CnC_Renegade\Code\wwbitpack;D:\repos\FunNGames\CnC_Renegade\Code\wwui;D:\repos\FunNGames\CnC_Renegade\Code\WWAudio;D:\repos\FunNGames\CnC_Renegade\Code\wwutil;D:\repos\FunNGames\CnC_Renegade\Code\BinkMovie;D:\repos\FunNGames\CnC_Renegade\Code\SControl;D:\repos\FunNGames\CnC_Renegade\Code\BandTest;D:\repos\FunNGames\CnC_Renegade\Code\Combat;D:\repos\FunNGames\CnC_Renegade\Code\Commando;D:\repos\FunNGames\CnC_Renegade\Code\Scripts;D:\repos\FunNGames\CnC_Renegade\Code\GameSpy;D:\repos\FunNGames\CnC_Renegade\Code\wolapi;D:\repos\FunNGames\CnC_Renegade\Code\WWOnline;D:\repos\FunNGames\CnC_Renegade\DirectX-SDK-June2010-master\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\repos\FunNGames\CnC_Renegade\Code\compat;D:\repos\FunNGames\CnC_Renegade\Code;D:\repos\FunNGames\CnC_Renegade\Code\wwdebug;D:\repos\FunNGames\CnC_Renegade\Code\wwlib;D:\repos\FunNGames\CnC_Renegade\Code\WWMath;D:\repos\FunNGames\CnC_Renegade\Code\ww3d2;D:\repos\FunNGames\CnC_Renegade\Code\wwphys;D:\repos\FunNGames\CnC_Renegade\Code\wwnet;D:\repos\FunNGames\CnC_Renegade\Code\wwsaveload;D:\repos\FunNGames\CnC_Renegade\Code\wwtranslatedb;D:\repos\FunNGames\CnC_Renegade\Code\wwbitpack;D:\repos\FunNGames\CnC_Renegade\Code\wwui;D:\repos\FunNGames\CnC_Renegade\Code\WWAudio;D:\repos\FunNGames\CnC_Renegade\Code\wwutil;D:\repos\FunNGames\CnC_Renegade\Code\BinkMovie;D:\repos\FunNGames\CnC_Renegade\Code\SControl;D:\repos\FunNGames\CnC_Renegade\Code\BandTest;D:\repos\FunNGames\CnC_Renegade\Code\Combat;D:\repos\FunNGames\CnC_Renegade\Code\Commando;D:\repos\FunNGames\CnC_Renegade\Code\Scripts;D:\repos\FunNGames\CnC_Renegade\Code\GameSpy;D:\repos\FunNGames\CnC_Renegade\Code\wolapi;D:\repos\FunNGames\CnC_Renegade\Code\WWOnline;D:\repos\FunNGames\CnC_Renegade\DirectX-SDK-June2010-master\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:twoPhase-</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ConformanceMode>false</ConformanceMode>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4996;4244;4267;4018;4305;4800;4838;4101;4102;4146;4477;4312;4311;4302</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_MBCS;REGEX_MALLOC;STDC_HEADERS;WINVER=0x0601;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;WWDEBUG;WIN64;_WIN64;CMAKE_INTDIR="Profile"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_MBCS;REGEX_MALLOC;STDC_HEADERS;WINVER=0x0601;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;WWDEBUG;WIN64;_WIN64;CMAKE_INTDIR=\"Profile\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\repos\FunNGames\CnC_Renegade\Code\compat;D:\repos\FunNGames\CnC_Renegade\Code;D:\repos\FunNGames\CnC_Renegade\Code\wwdebug;D:\repos\FunNGames\CnC_Renegade\Code\wwlib;D:\repos\FunNGames\CnC_Renegade\Code\WWMath;D:\repos\FunNGames\CnC_Renegade\Code\ww3d2;D:\repos\FunNGames\CnC_Renegade\Code\wwphys;D:\repos\FunNGames\CnC_Renegade\Code\wwnet;D:\repos\FunNGames\CnC_Renegade\Code\wwsaveload;D:\repos\FunNGames\CnC_Renegade\Code\wwtranslatedb;D:\repos\FunNGames\CnC_Renegade\Code\wwbitpack;D:\repos\FunNGames\CnC_Renegade\Code\wwui;D:\repos\FunNGames\CnC_Renegade\Code\WWAudio;D:\repos\FunNGames\CnC_Renegade\Code\wwutil;D:\repos\FunNGames\CnC_Renegade\Code\BinkMovie;D:\repos\FunNGames\CnC_Renegade\Code\SControl;D:\repos\FunNGames\CnC_Renegade\Code\BandTest;D:\repos\FunNGames\CnC_Renegade\Code\Combat;D:\repos\FunNGames\CnC_Renegade\Code\Commando;D:\repos\FunNGames\CnC_Renegade\Code\Scripts;D:\repos\FunNGames\CnC_Renegade\Code\GameSpy;D:\repos\FunNGames\CnC_Renegade\Code\wolapi;D:\repos\FunNGames\CnC_Renegade\Code\WWOnline;D:\repos\FunNGames\CnC_Renegade\DirectX-SDK-June2010-master\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\repos\FunNGames\CnC_Renegade\Code\compat;D:\repos\FunNGames\CnC_Renegade\Code;D:\repos\FunNGames\CnC_Renegade\Code\wwdebug;D:\repos\FunNGames\CnC_Renegade\Code\wwlib;D:\repos\FunNGames\CnC_Renegade\Code\WWMath;D:\repos\FunNGames\CnC_Renegade\Code\ww3d2;D:\repos\FunNGames\CnC_Renegade\Code\wwphys;D:\repos\FunNGames\CnC_Renegade\Code\wwnet;D:\repos\FunNGames\CnC_Renegade\Code\wwsaveload;D:\repos\FunNGames\CnC_Renegade\Code\wwtranslatedb;D:\repos\FunNGames\CnC_Renegade\Code\wwbitpack;D:\repos\FunNGames\CnC_Renegade\Code\wwui;D:\repos\FunNGames\CnC_Renegade\Code\WWAudio;D:\repos\FunNGames\CnC_Renegade\Code\wwutil;D:\repos\FunNGames\CnC_Renegade\Code\BinkMovie;D:\repos\FunNGames\CnC_Renegade\Code\SControl;D:\repos\FunNGames\CnC_Renegade\Code\BandTest;D:\repos\FunNGames\CnC_Renegade\Code\Combat;D:\repos\FunNGames\CnC_Renegade\Code\Commando;D:\repos\FunNGames\CnC_Renegade\Code\Scripts;D:\repos\FunNGames\CnC_Renegade\Code\GameSpy;D:\repos\FunNGames\CnC_Renegade\Code\wolapi;D:\repos\FunNGames\CnC_Renegade\Code\WWOnline;D:\repos\FunNGames\CnC_Renegade\DirectX-SDK-June2010-master\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/repos/FunNGames/CnC_Renegade/Code/wwlib/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/repos/FunNGames/CnC_Renegade -BD:/repos/FunNGames/CnC_Renegade/build_x64 --check-stamp-file D:/repos/FunNGames/CnC_Renegade/build_x64/Code/wwlib/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\repos\FunNGames\CnC_Renegade\build_x64\Code\wwlib\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/repos/FunNGames/CnC_Renegade/Code/wwlib/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/repos/FunNGames/CnC_Renegade -BD:/repos/FunNGames/CnC_Renegade/build_x64 --check-stamp-file D:/repos/FunNGames/CnC_Renegade/build_x64/Code/wwlib/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\repos\FunNGames\CnC_Renegade\build_x64\Code\wwlib\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">Building Custom Rule D:/repos/FunNGames/CnC_Renegade/Code/wwlib/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/repos/FunNGames/CnC_Renegade -BD:/repos/FunNGames/CnC_Renegade/build_x64 --check-stamp-file D:/repos/FunNGames/CnC_Renegade/build_x64/Code/wwlib/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">D:\repos\FunNGames\CnC_Renegade\build_x64\Code\wwlib\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\Except.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\FastAllocator.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\LaunchWeb.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\TARGA.CPP" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\WWCOMUtil.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\_convert.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\_mono.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\_timer.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\argv.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\b64pipe.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\b64straw.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\base64.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\blit.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\blowfish.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\blowpipe.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\blwstraw.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\buff.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\bufffile.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\chunkio.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\convert.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\cpudetect.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\crc.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\crcpipe.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\crcstraw.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\critsection.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\cstraw.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\data.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\ddraw.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\dib.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\draw.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\dsurface.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\ffactory.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\fixed.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\gcd_lcm.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\hash.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\hsv.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\ini.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\int.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\jshell.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\keyboard.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\lcw.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\lcwpipe.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\load.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\lzo.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\lzo1x_c.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\lzo1x_d.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\lzopipe.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\lzostraw.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\md5.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\mixfile.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\mono.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\mpmath.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\mpu.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\msgloop.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\multilist.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\mutex.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\nstrdup.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\obscure.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\palette.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\pcx.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\pipe.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\pk.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\pkpipe.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\pkstraw.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\point.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\ramfile.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\random.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\rawfile.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\rc4.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\rcfile.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\readline.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\realcrc.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\refcount.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\regexpr.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\registry.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\rgb.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\rle.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\rndstraw.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\rndstrng.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\sampler.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\sha.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\shapipe.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\shastraw.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\slnode.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\srandom.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\stimer.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\straw.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\strtok_r.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\surface.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\systimer.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\tagblock.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\textfile.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\thread.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\trim.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\vector.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\verchk.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\widestring.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\win.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\wwfile.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\wwfont.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\wwmouse.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\wwstring.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\xpipe.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\xstraw.cpp" />
+    <ClCompile Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\xsurface.cpp" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\CallbackHook.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\Except.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\FastAllocator.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\LaunchWeb.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\Notify.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\Signaler.h" />
+    <None Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\TARGA.H">
+    </None>
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\WWCOMUtil.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\_convert.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\_mono.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\_timer.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\_xmouse.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\always.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\argv.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\b64pipe.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\b64straw.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\base64.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\binheap.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\bittype.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\blit.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\blitblit.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\blitter.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\blowfish.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\blowpipe.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\blwstraw.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\bool.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\borlandc.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\bound.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\bsearch.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\bsurface.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\buff.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\bufffile.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\chunkio.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\convert.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\cpudetect.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\crc.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\crcpipe.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\crcstraw.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\critsection.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\cstraw.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\data.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\dib.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\draw.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\dsurface.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\ffactory.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\fixed.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\font.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\gcd_lcm.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\global.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\hash.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\hashcalc.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\hashlist.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\hashtab.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\hashtemplate.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\hsv.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\iff.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\incdec.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\index.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\ini.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\inisup.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\int.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\iostruct.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\keyboard.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\lcw.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\lcwpipe.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\listnode.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\lzo.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\lzo1x.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\lzo_conf.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\lzoconf.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\lzopipe.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\lzostraw.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\md5.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\mempool.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\misc.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\mixfile.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\mmsys.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\mono.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\monodrvr.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\mpmath.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\mpu.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\msgloop.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\multilist.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\mutex.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\noinit.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\nstrdup.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\ntree.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\obscure.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\palette.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\pcx.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\pipe.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\pk.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\pkpipe.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\pkstraw.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\point.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\ramfile.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\random.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\rawfile.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\rc4.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\rcfile.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\readline.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\realcrc.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\ref_ptr.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\refcount.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\regexpr.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\registry.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\rgb.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\rle.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\rlerle.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\rndstraw.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\rndstrng.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\rng.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\rsacrypt.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\sampler.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\search.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\sha.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\shapeset.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\shapipe.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\sharebuf.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\shastraw.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\simplevec.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\slist.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\slnode.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\smartptr.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\srandom.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\stimer.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\stl.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\straw.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\strtok_r.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\surface.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\surfrect.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\swap.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\systimer.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\tagblock.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\textfile.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\thread.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\timer.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\trackwin.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\trackxy.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\trect.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\trim.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\uarray.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\vector.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\verchk.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\visualc.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\watcom.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\widestring.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\win.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\wwfile.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\wwfont.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\wwmouse.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\wwstring.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\xmouse.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\xpipe.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\xstraw.h" />
+    <ClInclude Include="D:\repos\FunNGames\CnC_Renegade\Code\wwlib\xsurface.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\ZERO_CHECK.vcxproj">
+      <Project>{DC23827D-825A-3D3F-99D6-72F81C464891}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\wwdebug\wwdebug.vcxproj">
+      <Project>{0DF8181F-A56F-33D8-ADA7-FA98F6192F9F}</Project>
+      <Name>wwdebug</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

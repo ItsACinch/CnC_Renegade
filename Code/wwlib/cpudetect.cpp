@@ -22,6 +22,7 @@
 #include "thread.h"
 #include "mpu.h"
 #pragma warning (disable : 4201)	// Nonstandard extension - nameless struct
+#include <intrin.h>  // For __cpuid, __rdtsc - MUST be before windows.h on x64
 #include <windows.h>
 #include "systimer.h"
 
@@ -142,34 +143,18 @@ const char* CPUDetectClass::Get_Processor_Manufacturer_Name()
 	return ManufacturerNames[ProcessorManufacturer];
 }
 
-#define ASM_RDTSC _asm _emit 0x0f _asm _emit 0x31
-
 static unsigned Calculate_Processor_Speed(__int64& ticks_per_second)
 {
-	struct {
-		unsigned timer0_h;
-		unsigned timer0_l;
-		unsigned timer1_h;
-		unsigned timer1_l;
-	} Time;
-
-	__asm {
-		ASM_RDTSC;
-		mov Time.timer0_h,eax
-		mov Time.timer0_l,edx
-	}
+	unsigned __int64 timer0 = __rdtsc();
 
 	unsigned start=TIMEGETTIME();
 	unsigned elapsed;
+	unsigned __int64 timer1;
 	while ((elapsed=TIMEGETTIME()-start)<200) {
-		__asm {
-			ASM_RDTSC;
-			mov Time.timer1_h,eax
-			mov Time.timer1_l,edx
-		}
+		timer1 = __rdtsc();
 	}
 
-	__int64 t=*(__int64*)&Time.timer1_h-*(__int64*)&Time.timer0_h;
+	__int64 t = (__int64)(timer1 - timer0);
 	ticks_per_second=(1000/200)*t;	// Ticks per second
 	return unsigned(t/(elapsed*1000));
 }
@@ -827,33 +812,21 @@ void CPUDetectClass::Init_Processor_String()
 
 void CPUDetectClass::Init_CPUID_Instruction()
 {
-	unsigned long cpuid_available=0;
-
-   // The pushfd/popfd commands are done using emits
-   // because CodeWarrior seems to have problems with
-   // the command (huh?)
-
-   __asm
-   {
-		mov cpuid_available,0	// clear flag
-		push ebx
-		pushfd
-		pop eax
-		mov ebx,eax
-		xor eax,0x00200000
-		push eax
-		popfd
-		pushfd
-		pop eax
-		xor eax,ebx
-		je done
-		mov cpuid_available,1
-done:
-		push ebx
-		popfd
-		pop ebx
+#ifdef _WIN64
+	// All x64 processors support CPUID
+	HasCPUIDInstruction = true;
+#else
+	// For 32-bit, use intrinsic to check CPUID support
+	// All processors since Pentium support CPUID, so assume true for modern systems
+	__try {
+		int cpuInfo[4];
+		__cpuid(cpuInfo, 0);
+		HasCPUIDInstruction = true;
 	}
-	HasCPUIDInstruction=!!cpuid_available;
+	__except(EXCEPTION_EXECUTE_HANDLER) {
+		HasCPUIDInstruction = false;
+	}
+#endif
 }
 
 void CPUDetectClass::Init_Processor_Features()
@@ -917,30 +890,13 @@ bool CPUDetectClass::CPUID(
 {
 	if (!Has_CPUID_Instruction()) return false;	// Most processors since 486 have CPUID...
 
-	unsigned u_eax;
-	unsigned u_ebx;
-	unsigned u_ecx;
-	unsigned u_edx;
+	int cpuInfo[4];
+	__cpuid(cpuInfo, cpuid_type);
 
-	__asm
-	{
-		pushad
-		mov		eax,[cpuid_type]
-		xor		ebx,ebx
-		xor		ecx,ecx
-		xor		edx,edx
-		cpuid
-		mov		[u_eax],eax
-		mov		[u_ebx],ebx
-		mov		[u_ecx],ecx
-		mov		[u_edx],edx
-		popad
-	}
-
-	u_eax_=u_eax;
-	u_ebx_=u_ebx;
-	u_ecx_=u_ecx;
-	u_edx_=u_edx;
+	u_eax_ = (unsigned)cpuInfo[0];
+	u_ebx_ = (unsigned)cpuInfo[1];
+	u_ecx_ = (unsigned)cpuInfo[2];
+	u_edx_ = (unsigned)cpuInfo[3];
 
 	return true;
 }
@@ -1022,7 +978,7 @@ void CPUDetectClass::Init_Processor_Log()
 	}
 
 	if (CPUDetectClass::Get_L1_Instruction_Trace_Cache_Size()) {
-		SYSLOG(("L1 Instruction Trace Cache: %d way set associative, %dk µOPs\r\n",
+		SYSLOG(("L1 Instruction Trace Cache: %d way set associative, %dk ï¿½OPs\r\n",
 			CPUDetectClass::Get_L1_Instruction_Cache_Set_Associative(),
 			CPUDetectClass::Get_L1_Instruction_Cache_Size()/1024));
 	}

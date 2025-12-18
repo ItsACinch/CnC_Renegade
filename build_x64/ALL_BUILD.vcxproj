@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ResolveNugetPackages>false</ResolveNugetPackages>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Profile|x64">
+      <Configuration>Profile</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9EF3E087-D0BE-330A-8E68-41B330389CF3}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>ALL_BUILD</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>D:\repos\FunNGames\CnC_Renegade\Code\compat;D:\repos\FunNGames\CnC_Renegade\Code;D:\repos\FunNGames\CnC_Renegade\Code\wwdebug;D:\repos\FunNGames\CnC_Renegade\Code\wwlib;D:\repos\FunNGames\CnC_Renegade\Code\WWMath;D:\repos\FunNGames\CnC_Renegade\Code\ww3d2;D:\repos\FunNGames\CnC_Renegade\Code\wwphys;D:\repos\FunNGames\CnC_Renegade\Code\wwnet;D:\repos\FunNGames\CnC_Renegade\Code\wwsaveload;D:\repos\FunNGames\CnC_Renegade\Code\wwtranslatedb;D:\repos\FunNGames\CnC_Renegade\Code\wwbitpack;D:\repos\FunNGames\CnC_Renegade\Code\wwui;D:\repos\FunNGames\CnC_Renegade\Code\WWAudio;D:\repos\FunNGames\CnC_Renegade\Code\wwutil;D:\repos\FunNGames\CnC_Renegade\Code\BinkMovie;D:\repos\FunNGames\CnC_Renegade\Code\SControl;D:\repos\FunNGames\CnC_Renegade\Code\BandTest;D:\repos\FunNGames\CnC_Renegade\Code\Combat;D:\repos\FunNGames\CnC_Renegade\Code\Commando;D:\repos\FunNGames\CnC_Renegade\Code\Scripts;D:\repos\FunNGames\CnC_Renegade\Code\GameSpy;D:\repos\FunNGames\CnC_Renegade\Code\wolapi;D:\repos\FunNGames\CnC_Renegade\Code\WWOnline;D:\repos\FunNGames\CnC_Renegade\DirectX-SDK-June2010-master\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>D:\repos\FunNGames\CnC_Renegade\Code\compat;D:\repos\FunNGames\CnC_Renegade\Code;D:\repos\FunNGames\CnC_Renegade\Code\wwdebug;D:\repos\FunNGames\CnC_Renegade\Code\wwlib;D:\repos\FunNGames\CnC_Renegade\Code\WWMath;D:\repos\FunNGames\CnC_Renegade\Code\ww3d2;D:\repos\FunNGames\CnC_Renegade\Code\wwphys;D:\repos\FunNGames\CnC_Renegade\Code\wwnet;D:\repos\FunNGames\CnC_Renegade\Code\wwsaveload;D:\repos\FunNGames\CnC_Renegade\Code\wwtranslatedb;D:\repos\FunNGames\CnC_Renegade\Code\wwbitpack;D:\repos\FunNGames\CnC_Renegade\Code\wwui;D:\repos\FunNGames\CnC_Renegade\Code\WWAudio;D:\repos\FunNGames\CnC_Renegade\Code\wwutil;D:\repos\FunNGames\CnC_Renegade\Code\BinkMovie;D:\repos\FunNGames\CnC_Renegade\Code\SControl;D:\repos\FunNGames\CnC_Renegade\Code\BandTest;D:\repos\FunNGames\CnC_Renegade\Code\Combat;D:\repos\FunNGames\CnC_Renegade\Code\Commando;D:\repos\FunNGames\CnC_Renegade\Code\Scripts;D:\repos\FunNGames\CnC_Renegade\Code\GameSpy;D:\repos\FunNGames\CnC_Renegade\Code\wolapi;D:\repos\FunNGames\CnC_Renegade\Code\WWOnline;D:\repos\FunNGames\CnC_Renegade\DirectX-SDK-June2010-master\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>D:\repos\FunNGames\CnC_Renegade\Code\compat;D:\repos\FunNGames\CnC_Renegade\Code;D:\repos\FunNGames\CnC_Renegade\Code\wwdebug;D:\repos\FunNGames\CnC_Renegade\Code\wwlib;D:\repos\FunNGames\CnC_Renegade\Code\WWMath;D:\repos\FunNGames\CnC_Renegade\Code\ww3d2;D:\repos\FunNGames\CnC_Renegade\Code\wwphys;D:\repos\FunNGames\CnC_Renegade\Code\wwnet;D:\repos\FunNGames\CnC_Renegade\Code\wwsaveload;D:\repos\FunNGames\CnC_Renegade\Code\wwtranslatedb;D:\repos\FunNGames\CnC_Renegade\Code\wwbitpack;D:\repos\FunNGames\CnC_Renegade\Code\wwui;D:\repos\FunNGames\CnC_Renegade\Code\WWAudio;D:\repos\FunNGames\CnC_Renegade\Code\wwutil;D:\repos\FunNGames\CnC_Renegade\Code\BinkMovie;D:\repos\FunNGames\CnC_Renegade\Code\SControl;D:\repos\FunNGames\CnC_Renegade\Code\BandTest;D:\repos\FunNGames\CnC_Renegade\Code\Combat;D:\repos\FunNGames\CnC_Renegade\Code\Commando;D:\repos\FunNGames\CnC_Renegade\Code\Scripts;D:\repos\FunNGames\CnC_Renegade\Code\GameSpy;D:\repos\FunNGames\CnC_Renegade\Code\wolapi;D:\repos\FunNGames\CnC_Renegade\Code\WWOnline;D:\repos\FunNGames\CnC_Renegade\DirectX-SDK-June2010-master\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\repos\FunNGames\CnC_Renegade\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/repos/FunNGames/CnC_Renegade/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/repos/FunNGames/CnC_Renegade -BD:/repos/FunNGames/CnC_Renegade/build_x64 --check-stamp-file D:/repos/FunNGames/CnC_Renegade/build_x64/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeCInformation.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeCXXInformation.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeGenericSystem.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeLanguageInformation.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeRCInformation.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Compiler\MSVC-C.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Compiler\MSVC.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Platform\Windows.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Platform\WindowsPaths.cmake;D:\repos\FunNGames\CnC_Renegade\build_x64\CMakeFiles\3.30.5-msvc23\CMakeCCompiler.cmake;D:\repos\FunNGames\CnC_Renegade\build_x64\CMakeFiles\3.30.5-msvc23\CMakeCXXCompiler.cmake;D:\repos\FunNGames\CnC_Renegade\build_x64\CMakeFiles\3.30.5-msvc23\CMakeRCCompiler.cmake;D:\repos\FunNGames\CnC_Renegade\build_x64\CMakeFiles\3.30.5-msvc23\CMakeSystem.cmake;D:\repos\FunNGames\CnC_Renegade\cmake\CompilerFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\repos\FunNGames\CnC_Renegade\build_x64\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/repos/FunNGames/CnC_Renegade/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/repos/FunNGames/CnC_Renegade -BD:/repos/FunNGames/CnC_Renegade/build_x64 --check-stamp-file D:/repos/FunNGames/CnC_Renegade/build_x64/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeCInformation.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeCXXInformation.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeGenericSystem.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeLanguageInformation.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeRCInformation.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Compiler\MSVC-C.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Compiler\MSVC.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Platform\Windows.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Platform\WindowsPaths.cmake;D:\repos\FunNGames\CnC_Renegade\build_x64\CMakeFiles\3.30.5-msvc23\CMakeCCompiler.cmake;D:\repos\FunNGames\CnC_Renegade\build_x64\CMakeFiles\3.30.5-msvc23\CMakeCXXCompiler.cmake;D:\repos\FunNGames\CnC_Renegade\build_x64\CMakeFiles\3.30.5-msvc23\CMakeRCCompiler.cmake;D:\repos\FunNGames\CnC_Renegade\build_x64\CMakeFiles\3.30.5-msvc23\CMakeSystem.cmake;D:\repos\FunNGames\CnC_Renegade\cmake\CompilerFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\repos\FunNGames\CnC_Renegade\build_x64\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">Building Custom Rule D:/repos/FunNGames/CnC_Renegade/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/repos/FunNGames/CnC_Renegade -BD:/repos/FunNGames/CnC_Renegade/build_x64 --check-stamp-file D:/repos/FunNGames/CnC_Renegade/build_x64/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeCInformation.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeCXXInformation.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeGenericSystem.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeLanguageInformation.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeRCInformation.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Compiler\MSVC-C.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Compiler\MSVC.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Platform\Windows.cmake;C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\Platform\WindowsPaths.cmake;D:\repos\FunNGames\CnC_Renegade\build_x64\CMakeFiles\3.30.5-msvc23\CMakeCCompiler.cmake;D:\repos\FunNGames\CnC_Renegade\build_x64\CMakeFiles\3.30.5-msvc23\CMakeCXXCompiler.cmake;D:\repos\FunNGames\CnC_Renegade\build_x64\CMakeFiles\3.30.5-msvc23\CMakeRCCompiler.cmake;D:\repos\FunNGames\CnC_Renegade\build_x64\CMakeFiles\3.30.5-msvc23\CMakeSystem.cmake;D:\repos\FunNGames\CnC_Renegade\cmake\CompilerFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">D:\repos\FunNGames\CnC_Renegade\build_x64\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\ZERO_CHECK.vcxproj">
+      <Project>{DC23827D-825A-3D3F-99D6-72F81C464891}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\BandTest\bandtest.vcxproj">
+      <Project>{5521B9E3-E5FE-3F44-B7A8-54DED16AD5A7}</Project>
+      <Name>bandtest</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\BinkMovie\binkmovie.vcxproj">
+      <Project>{2F495E96-E586-3743-9DB4-41FCAF8B0C98}</Project>
+      <Name>binkmovie</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\Combat\combat.vcxproj">
+      <Project>{DFD0D121-EE1D-33BD-8679-F78E2EBFF47C}</Project>
+      <Name>combat</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\GameSpy\gamespy.vcxproj">
+      <Project>{0575EAD7-4E47-3A68-A169-C23EC332922C}</Project>
+      <Name>gamespy</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\Commando\renegade.vcxproj">
+      <Project>{AC066417-9A9E-3885-88BF-8A067FB49B12}</Project>
+      <Name>renegade</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\SControl\scontrol.vcxproj">
+      <Project>{A9F09D3C-312F-302E-A2B8-8A2F8A67F0B5}</Project>
+      <Name>scontrol</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\Scripts\scripts.vcxproj">
+      <Project>{6CAE8C9A-A78B-3182-AC2F-425332EE58D2}</Project>
+      <Name>scripts</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\ww3d2\ww3d2.vcxproj">
+      <Project>{61E52268-45B4-313D-B904-5155B5B71DD2}</Project>
+      <Name>ww3d2</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\WWAudio\wwaudio.vcxproj">
+      <Project>{E1FB8E08-4436-344E-8819-0F24D365301C}</Project>
+      <Name>wwaudio</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\wwbitpack\wwbitpack.vcxproj">
+      <Project>{87559AD5-3B37-3C6D-987B-1D4778DB7CC7}</Project>
+      <Name>wwbitpack</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\wwdebug\wwdebug.vcxproj">
+      <Project>{0DF8181F-A56F-33D8-ADA7-FA98F6192F9F}</Project>
+      <Name>wwdebug</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\wwlib\wwlib.vcxproj">
+      <Project>{000F12FD-E210-3096-8F49-F699C102189B}</Project>
+      <Name>wwlib</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\WWMath\wwmath.vcxproj">
+      <Project>{B994CFCB-A49C-3522-9861-4C43EDD8CB67}</Project>
+      <Name>wwmath</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\wwnet\wwnet.vcxproj">
+      <Project>{DAB6F00C-3D02-3A30-86CD-0800B9EDE46D}</Project>
+      <Name>wwnet</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\wwphys\wwphys.vcxproj">
+      <Project>{B93FE882-EA40-3D96-B8D3-6894868180A9}</Project>
+      <Name>wwphys</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\wwsaveload\wwsaveload.vcxproj">
+      <Project>{096AA828-A1AC-3F0B-8C7C-DC35A8DA729B}</Project>
+      <Name>wwsaveload</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\wwtranslatedb\wwtranslatedb.vcxproj">
+      <Project>{B68A51AC-0609-36FF-8AD8-B5BE72F84B19}</Project>
+      <Name>wwtranslatedb</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\wwui\wwui.vcxproj">
+      <Project>{BD331D91-5BC4-39FC-B17F-D8C38D8413D3}</Project>
+      <Name>wwui</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\repos\FunNGames\CnC_Renegade\build_x64\Code\wwutil\wwutil.vcxproj">
+      <Project>{DF61D388-5E3C-3FDA-9FEE-2748BFBB4472}</Project>
+      <Name>wwutil</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

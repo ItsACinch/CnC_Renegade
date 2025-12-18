@@ -105,6 +105,12 @@
 // Windows Header Compatibility
 // =============================================================================
 
+// On x64, intrin.h MUST be included before windows.h to avoid
+// duplicate declaration errors for intrinsics like __readgsqword
+#ifdef _WIN64
+    #include <intrin.h>
+#endif
+
 // Ensure proper Windows version targeting
 #ifndef WINVER
     #define WINVER 0x0601  // Windows 7

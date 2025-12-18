@@ -445,12 +445,15 @@ class BlitTransLucent75 : public Blitter {
 
 
 /*
-**	Assembly versions of some of the templated blitter object functions. Borland and 
+**	Assembly versions of some of the templated blitter object functions. Borland and
 **	Visual C++ support a compatible inline-assembly formats. However, Borland compiler
-**	does not allow inline-assembly to be part of an inline function -- go figure. 
+**	does not allow inline-assembly to be part of an inline function -- go figure.
 **	It will still compile, it just generates warning messages.
+**
+**	Note: Inline assembly is not supported on x64 by MSVC, so these are x86 only.
+**	The template implementations above are used for x64.
 */
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && !defined(_M_X64)
 
 inline void BlitTrans<unsigned char>::BlitForward(void * dest, void const * source, int len) const
 {

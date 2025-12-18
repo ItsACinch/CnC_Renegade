@@ -42,6 +42,17 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 # Include compiler configuration
 include(CompilerFlags)
 
+# Platform detection (32-bit vs 64-bit)
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    message(STATUS "Building for 64-bit (x64)")
+    set(PLATFORM_BITS "64")
+    set(PLATFORM_DIR "x64")
+else()
+    message(STATUS "Building for 32-bit (x86)")
+    set(PLATFORM_BITS "32")
+    set(PLATFORM_DIR "x86")
+endif()
+
 # Global definitions matching original build
 add_compile_definitions(
     WIN32
@@ -54,6 +65,9 @@ add_compile_definitions(
     $<$<CONFIG:Profile>:NDEBUG>
     $<$<CONFIG:Profile>:WWDEBUG>
     $<$<CONFIG:Release>:NDEBUG>
+    # 64-bit specific definitions
+    $<$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>:WIN64>
+    $<$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>:_WIN64>
 )
 
 # Options for special builds
@@ -106,7 +120,8 @@ set(DIRECTX_SDK_DIR "${CMAKE_SOURCE_DIR}/DirectX-SDK-June2010-master")
 if(EXISTS "${DIRECTX_SDK_DIR}/Include")
     message(STATUS "Found DirectX SDK at: ${DIRECTX_SDK_DIR}")
     include_directories(${DIRECTX_SDK_DIR}/Include)
-    link_directories(${DIRECTX_SDK_DIR}/Lib/x86)
+    # Use platform-specific library directory
+    link_directories(${DIRECTX_SDK_DIR}/Lib/${PLATFORM_DIR})
 else()
     message(WARNING "DirectX SDK not found at ${DIRECTX_SDK_DIR}")
 endif()

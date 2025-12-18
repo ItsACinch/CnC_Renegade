@@ -177,7 +177,7 @@ int __cdecl _purecall(void)
 	** Use int3 to cause an exception.
 	*/
 	WWDEBUG_SAY(("Pure Virtual Function call. Oh No!\n"));
-	_asm int 0x03;
+	__debugbreak();  // Portable intrinsic for int 3
 #endif	//_DEBUG_ASSERT
 
 	return(return_code);
@@ -356,13 +356,13 @@ void Dump_Exception_Info(EXCEPTION_POINTERS *e_info)
 	if (imagehelp != NULL) {
 		DebugString ("Exception Handler: Found IMAGEHLP.DLL - linking to required functions\n");
 		char const *function_name = NULL;
-		unsigned long *fptr = (unsigned long*) &_SymCleanup;
+		FARPROC *fptr = (FARPROC*) &_SymCleanup;
 		int count = 0;
 
 		do {
 			function_name = ImagehelpFunctionNames[count];
 			if (function_name) {
-				*fptr = (unsigned long) GetProcAddress(imagehelp, function_name);
+				*fptr = GetProcAddress(imagehelp, function_name);
 				fptr++;
 				count++;
 			}
@@ -465,20 +465,26 @@ void Dump_Exception_Info(EXCEPTION_POINTERS *e_info)
 	symptr->SizeOfStruct = sizeof (IMAGEHLP_SYMBOL);
 	symptr->MaxNameLength = 256-sizeof (IMAGEHLP_SYMBOL);
 	symptr->Size = 0;
+#ifdef _WIN64
+	symptr->Address = context->Rip;
+	DWORD64 instrPtr = context->Rip;
+#else
 	symptr->Address = context->Eip;
+	DWORD instrPtr = context->Eip;
+#endif
 
-	if (!IsBadCodePtr((FARPROC)context->Eip)) {
-		if (_SymGetSymFromAddr != NULL && _SymGetSymFromAddr (GetCurrentProcess(), context->Eip, &displacement, symptr)) {
-			sprintf (scrap, "Exception occurred at %08X - %s + %08X\r\n", context->Eip, symptr->Name, displacement);
+	if (!IsBadCodePtr((FARPROC)instrPtr)) {
+		if (_SymGetSymFromAddr != NULL && _SymGetSymFromAddr (GetCurrentProcess(), (DWORD)instrPtr, &displacement, symptr)) {
+			sprintf (scrap, "Exception occurred at %p - %s + %08X\r\n", (void*)instrPtr, symptr->Name, displacement);
 		} else {
-			DebugString ("Exception Handler: Failed to get symbol for EIP\r\n");
+			DebugString ("Exception Handler: Failed to get symbol for EIP/RIP\r\n");
 			if (_SymGetSymFromAddr != NULL) {
 				DebugString ("Exception Handler: SymGetSymFromAddr failed with code %d - %s\n", GetLastError(), Last_Error_Text());
 			}
-			sprintf (scrap, "Exception occurred at %08X\r\n", context->Eip);
+			sprintf (scrap, "Exception occurred at %p\r\n", (void*)instrPtr);
 		}
 	} else {
-		DebugString ("Exception Handler: context->Eip is bad code pointer\n");
+		DebugString ("Exception Handler: context->Eip/Rip is bad code pointer\n");
 	}
 
 	Add_Txt (scrap);
@@ -581,6 +587,24 @@ void Dump_Exception_Info(EXCEPTION_POINTERS *e_info)
 	/*
 	** Dump the registers.
 	*/
+#ifdef _WIN64
+	sprintf(scrap, "Rip:%016llX\tRsp:%016llX\tRbp:%016llX\r\n", context->Rip, context->Rsp, context->Rbp);
+	Add_Txt(scrap);
+	sprintf(scrap, "Rax:%016llX\tRbx:%016llX\tRcx:%016llX\r\n", context->Rax, context->Rbx, context->Rcx);
+	Add_Txt(scrap);
+	sprintf(scrap, "Rdx:%016llX\tRsi:%016llX\tRdi:%016llX\r\n", context->Rdx, context->Rsi, context->Rdi);
+	Add_Txt(scrap);
+	sprintf(scrap, "R8:%016llX\tR9:%016llX\tR10:%016llX\r\n", context->R8, context->R9, context->R10);
+	Add_Txt(scrap);
+	sprintf(scrap, "R11:%016llX\tR12:%016llX\tR13:%016llX\r\n", context->R11, context->R12, context->R13);
+	Add_Txt(scrap);
+	sprintf(scrap, "R14:%016llX\tR15:%016llX\r\n", context->R14, context->R15);
+	Add_Txt(scrap);
+	sprintf(scrap, "EFlags:%08X \r\n", context->EFlags);
+	Add_Txt(scrap);
+	sprintf(scrap, "CS:%04x  SS:%04x  DS:%04x  ES:%04x  FS:%04x  GS:%04x\r\n", context->SegCs, context->SegSs, context->SegDs, context->SegEs, context->SegFs, context->SegGs);
+	Add_Txt(scrap);
+#else
 	sprintf(scrap, "Eip:%08X\tEsp:%08X\tEbp:%08X\r\n", context->Eip, context->Esp, context->Ebp);
 	Add_Txt(scrap);
 	sprintf(scrap, "Eax:%08X\tEbx:%08X\tEcx:%08X\r\n", context->Eax, context->Ebx, context->Ecx);
@@ -591,11 +615,14 @@ void Dump_Exception_Info(EXCEPTION_POINTERS *e_info)
 	Add_Txt(scrap);
 	sprintf(scrap, "CS:%04x  SS:%04x  DS:%04x  ES:%04x  FS:%04x  GS:%04x\r\n", context->SegCs, context->SegSs, context->SegDs, context->SegEs, context->SegFs, context->SegGs);
 	Add_Txt(scrap);
+#endif
 
 
 	/*
 	** Now the FP registers.
 	*/
+#ifndef _WIN64
+	// x87 FP register dump only for 32-bit
 	Add_Txt("\r\nFloating point status\r\n");
 	sprintf(scrap, "     Control word: %08x\r\n", context->FloatSave.ControlWord);
 	Add_Txt(scrap);
@@ -641,14 +668,29 @@ void Dump_Exception_Info(EXCEPTION_POINTERS *e_info)
 		sprintf(scrap, "   %+#.17e\r\n", fp_value);
 		Add_Txt(scrap);
 	}
+#else
+	// For x64, use XMM registers from FltSave
+	Add_Txt("\r\nFloating point status (XMM registers)\r\n");
+	sprintf(scrap, "     MxCsr: %08x\r\n", context->MxCsr);
+	Add_Txt(scrap);
+	for (int xmm = 0; xmm < 16; xmm++) {
+		M128A *reg = &context->FltSave.XmmRegisters[xmm];
+		sprintf(scrap, "XMM%02d: %016llX%016llX\r\n", xmm, reg->High, reg->Low);
+		Add_Txt(scrap);
+	}
+#endif
 
 	/*
-	** Dump the bytes at EIP. This will make it easier to match the crash address with later versions of the game.
+	** Dump the bytes at EIP/RIP. This will make it easier to match the crash address with later versions of the game.
 	*/
-	DebugString("EIP bytes dump...\n");
+	DebugString("Instruction pointer bytes dump...\n");
+#ifdef _WIN64
+	sprintf(scrap, "\r\nBytes at CS:RIP (%016llX)  : ", context->Rip);
+	unsigned char *eip_ptr = (unsigned char *) (context->Rip);
+#else
 	sprintf(scrap, "\r\nBytes at CS:EIP (%08X)  : ", context->Eip);
-
 	unsigned char *eip_ptr = (unsigned char *) (context->Eip);
+#endif
 	char bytestr[32];
 
 	for (int c = 0 ; c < 32 ; c++) {
@@ -669,7 +711,11 @@ void Dump_Exception_Info(EXCEPTION_POINTERS *e_info)
 	*/
 	DebugString("Stack dump...\n");
 	Add_Txt("Stack dump (* indicates possible code address) :\r\n");
+#ifdef _WIN64
+	unsigned __int64 *stackptr = (unsigned __int64*) context->Rsp;
+#else
 	unsigned long *stackptr = (unsigned long*) context->Esp;
+#endif
 
 	for (int j=0 ; j<2048 ; j++) {
 		if (IsBadReadPtr(stackptr, 4)) {
@@ -1067,13 +1113,13 @@ void Load_Image_Helper(void)
 
 		if (ImageHelp != NULL) {
 			char const *function_name = NULL;
-			unsigned long *fptr = (unsigned long *) &_SymCleanup;
+			FARPROC *fptr = (FARPROC *) &_SymCleanup;
 			int count = 0;
 
 			do {
 				function_name = ImagehelpFunctionNames[count];
 				if (function_name) {
-					*fptr = (unsigned long) GetProcAddress(ImageHelp, function_name);
+					*fptr = GetProcAddress(ImageHelp, function_name);
 					fptr++;
 					count++;
 				}
@@ -1228,6 +1274,23 @@ int Stack_Walk(unsigned long *return_addresses, int num_addresses, CONTEXT *cont
 	/*
 	** Set up the stack frame structure for the start point of the stack walk (i.e. here).
 	*/
+#ifdef _WIN64
+	STACKFRAME64 stack_frame;
+	memset(&stack_frame, 0, sizeof(stack_frame));
+
+	CONTEXT current_context;
+	if (!context) {
+		RtlCaptureContext(&current_context);
+		context = &current_context;
+	}
+
+	stack_frame.AddrPC.Mode = AddrModeFlat;
+	stack_frame.AddrPC.Offset = context->Rip;
+	stack_frame.AddrStack.Mode = AddrModeFlat;
+	stack_frame.AddrStack.Offset = context->Rsp;
+	stack_frame.AddrFrame.Mode = AddrModeFlat;
+	stack_frame.AddrFrame.Offset = context->Rbp;
+#else
 	STACKFRAME stack_frame;
 	memset(&stack_frame, 0, sizeof(stack_frame));
 
@@ -1256,12 +1319,22 @@ here:
 		stack_frame.AddrStack.Offset = context->Esp;
 		stack_frame.AddrFrame.Offset = context->Ebp;
 	}
+#endif
 
 	int pointer_index = 0;
 
 	/*
 	** Walk the stack by the requested number of return address iterations.
 	*/
+#ifdef _WIN64
+	// Note: For x64, we'd need StackWalk64 which has a different signature
+	// For now, just use CaptureStackBackTrace as a simpler alternative
+	void* backtrace[256];
+	USHORT frames = CaptureStackBackTrace(0, (DWORD)num_addresses, backtrace, NULL);
+	for (USHORT i = 0; i < frames; i++) {
+		return_addresses[pointer_index++] = (unsigned long)(uintptr_t)backtrace[i];
+	}
+#else
 	for (int i = 0; i < num_addresses + 1; i++) {
 		if (_StackWalk(IMAGE_FILE_MACHINE_I386, GetCurrentProcess(), GetCurrentThread(), &stack_frame, NULL, NULL, _SymFunctionTableAccess, _SymGetModuleBase, NULL)) {
 
@@ -1277,6 +1350,7 @@ here:
 			break;
 		}
 	}
+#endif
 
 	return(pointer_index);
 }

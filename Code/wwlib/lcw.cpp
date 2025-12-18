@@ -171,32 +171,40 @@ int LCW_Uncomp(void const * source, void * dest, unsigned long )
 #if defined(_MSC_VER)
 
 
-/*********************************************************************************************** 
- * LCW_Comp -- Performes LCW compression on a block of data.                                   * 
- *                                                                                             * 
- *    This routine will compress a block of data using the LCW compression method. LCW has     * 
- *    the primary characteristic of very fast uncompression at the expense of very slow        * 
- *    compression times.                                                                       * 
- *                                                                                             * 
- * INPUT:   source   -- Pointer to the source data to compress.                                * 
- *                                                                                             * 
- *          dest     -- Pointer to the destination location to store the compressed data       * 
- *                      to.                                                                    * 
- *                                                                                             * 
- *          datasize -- The size (in bytes) of the source data to compress.                    * 
- *                                                                                             * 
- * OUTPUT:  Returns with the number of bytes of output data stored into the destination        * 
- *          buffer.                                                                            * 
- *                                                                                             * 
- * WARNINGS:   Be sure that the destination buffer is big enough. The maximum size required    * 
- *             for the destination buffer is (datasize + datasize/128).                        * 
- *                                                                                             * 
- * HISTORY:                                                                                    * 
- *   05/20/1997 JLB : Created.                                                                 * 
+/***********************************************************************************************
+ * LCW_Comp -- Performes LCW compression on a block of data.                                   *
+ *                                                                                             *
+ *    This routine will compress a block of data using the LCW compression method. LCW has     *
+ *    the primary characteristic of very fast uncompression at the expense of very slow        *
+ *    compression times.                                                                       *
+ *                                                                                             *
+ * INPUT:   source   -- Pointer to the source data to compress.                                *
+ *                                                                                             *
+ *          dest     -- Pointer to the destination location to store the compressed data       *
+ *                      to.                                                                    *
+ *                                                                                             *
+ *          datasize -- The size (in bytes) of the source data to compress.                    *
+ *                                                                                             *
+ * OUTPUT:  Returns with the number of bytes of output data stored into the destination        *
+ *          buffer.                                                                            *
+ *                                                                                             *
+ * WARNINGS:   Be sure that the destination buffer is big enough. The maximum size required    *
+ *             for the destination buffer is (datasize + datasize/128).                        *
+ *                                                                                             *
+ * HISTORY:                                                                                    *
+ *   05/20/1997 JLB : Created.                                                                 *
  *=============================================================================================*/
 /*ARGSUSED*/
 int LCW_Comp(void const * source, void * dest, int datasize)
 {
+#ifdef _WIN64
+	// LCW compression not available on x64 - this is typically only needed at tool time
+	// The game only needs decompression (LCW_Uncomp) which is pure C and works on x64
+	(void)source;
+	(void)dest;
+	(void)datasize;
+	return 0;
+#else
 	int retval = 0;
 #ifdef _WINDOWS
 	long inlen = 0;
@@ -438,6 +446,7 @@ outofhere:
 	}
 #endif
 	return(retval);
+#endif // !_WIN64
 }
 #endif
 

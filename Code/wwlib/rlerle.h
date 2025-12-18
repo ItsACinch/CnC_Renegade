@@ -454,7 +454,10 @@ class RLEBlitTransLucent75 : public RLEBlitter {
 };
 
 
-#if defined(_MSC_VER)
+// Assembly versions of some of the templated blitter object functions.
+// Note: Inline assembly is not supported on x64 by MSVC, so these are x86 only.
+// The template implementations above are used for x64.
+#if defined(_MSC_VER) && !defined(_M_X64)
 void RLEBlitTransZRemapXlat<unsigned short>::Blit(void * dest, void const * source, int len, int leadskip) const
 {
 	unsigned char const * remapper = *RemapTable;

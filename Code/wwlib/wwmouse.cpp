@@ -95,7 +95,7 @@ static WWMouseClass * _MousePtr = NULL;
  * HISTORY:                                                                                    *
  *   03/10/1997 JLB : Created.                                                                 *
  *=============================================================================================*/
-void CALLBACK Callback_Process_Mouse( UINT, UINT, DWORD, DWORD, DWORD  )
+void CALLBACK Callback_Process_Mouse( UINT, UINT, DWORD_PTR, DWORD_PTR, DWORD_PTR  )
 {
 	if (_MousePtr != NULL) {
 		_MousePtr->Process_Mouse();

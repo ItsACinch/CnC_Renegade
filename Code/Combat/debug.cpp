@@ -47,6 +47,7 @@
 #include "combat.h"
 #include "wwmemlog.h"
 #include "fastallocator.h"
+#include <intrin.h>
 
 #ifndef 	STEVES_NEW_CATCHER
 #define LOG_MEMORY 1		// enable this to turn on memory logging
@@ -621,12 +622,16 @@ void* __cdecl operator new(unsigned int s)
 	** Extract the return address. This is the default worst case amount of info we can get about the
 	** stack.
 	*/
+#ifdef _M_X64
+	_return_addr = (unsigned long)(uintptr_t)_ReturnAddress();
+#else
 	__asm
 	{
 		mov		eax,_locals_size
 		mov		eax,[ebp+eax+4]
 		mov		[_return_addr],eax
 	}
+#endif
 
 	/*
 	** Try using imagehlp.dll to walk the stack and get real return addresses for multiple calls.
@@ -967,6 +972,20 @@ int Stack_Walk(unsigned long *return_addresses, int num_addresses, CONTEXT *cont
 	/*
 	** Set up the stack frame structure for the start point of the stack walk (i.e. here).
 	*/
+#ifdef _M_X64
+	STACKFRAME64 stack_frame;
+	memset(&stack_frame, 0, sizeof(stack_frame));
+
+	CONTEXT ctx;
+	RtlCaptureContext(&ctx);
+
+	stack_frame.AddrPC.Mode = AddrModeFlat;
+	stack_frame.AddrPC.Offset = ctx.Rip;
+	stack_frame.AddrStack.Mode = AddrModeFlat;
+	stack_frame.AddrStack.Offset = ctx.Rsp;
+	stack_frame.AddrFrame.Mode = AddrModeFlat;
+	stack_frame.AddrFrame.Offset = ctx.Rbp;
+#else
 	STACKFRAME stack_frame;
 	memset(&stack_frame, 0, sizeof(stack_frame));
 
@@ -986,6 +1005,7 @@ here:
 	stack_frame.AddrStack.Offset = reg_esp;
 	stack_frame.AddrFrame.Mode = AddrModeFlat;
 	stack_frame.AddrFrame.Offset = reg_ebp;
+#endif
 
 	/*
 	** Use the context struct if it was provided.

@@ -53,6 +53,7 @@
 #include "wwprofile.h"
 #include "fastallocator.h"
 #include "wwdebug.h"
+#include <intrin.h>  // MUST be before windows.h on x64
 #include <windows.h>
 //#include "systimer.h"
 #include "systimer.h"
@@ -87,20 +88,8 @@ inline void WWProfile_Get_Ticks(_int64 * ticks)
 #ifdef _UNIX
        *ticks = TIMEGETTIME();
 #else
-	__asm
-	{
-		push edx;
-		push ecx;
-		push eax;
-		mov ecx,ticks;
-		_emit 0Fh
-		_emit 31h
-		mov [ecx],eax;
-		mov [ecx+4],edx;
-		pop eax;
-		pop ecx;
-		pop edx;
-	}
+	// Use intrinsic instead of inline assembly for x64 compatibility
+	*ticks = __rdtsc();
 #endif
 }
 

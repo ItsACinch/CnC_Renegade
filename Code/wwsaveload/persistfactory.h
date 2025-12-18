@@ -106,15 +106,23 @@ public:
 };
 
 
-template<class T, int CHUNKID> PersistClass * 
-SimplePersistFactoryClass<T,CHUNKID>::Load(ChunkLoadClass & cload) const 
+template<class T, int CHUNKID> PersistClass *
+SimplePersistFactoryClass<T,CHUNKID>::Load(ChunkLoadClass & cload) const
 {
 	T * new_obj = new T;
 	T * old_obj = NULL;
 
 	cload.Open_Chunk();
 	WWASSERT(cload.Cur_Chunk_ID() == SIMPLEFACTORY_CHUNKID_OBJPOINTER);
+#ifdef _M_X64
+	// On x64, read the 32-bit pointer value that was written by 32-bit code
+	// and extend it to 64-bit for use as a remapping key
+	uint32 old_obj_id = 0;
+	cload.Read(&old_obj_id, sizeof(uint32));
+	old_obj = (T*)(uintptr_t)old_obj_id;
+#else
 	cload.Read(&old_obj,sizeof(T *));
+#endif
 	cload.Close_Chunk();
 
 	cload.Open_Chunk();

@@ -38,6 +38,7 @@
 #define SMARTPTR_H
 
 #include	"noinit.h"
+#include	<stdint.h>
 
 template<class T>
 class SmartPtr
@@ -50,7 +51,8 @@ class SmartPtr
 
 		operator T * (void) const {return(Pointer);}
 
-		operator long (void) const {return((long)Pointer);}
+		// Use intptr_t for 64-bit compatibility (pointer-sized integer)
+		operator intptr_t (void) const {return((intptr_t)Pointer);}
 
 		bool Is_Valid(void) const {return(Pointer != 0);}
 

@@ -40,6 +40,9 @@
 #include "dlgconfigvideotab.h"
 #include "dlgconfigperformancetab.h"
 #include "systemsettings.h"
+#include "dlgmessagebox.h"
+#include "string_ids.h"
+#include "translatedb.h"
 
 
 ////////////////////////////////////////////////////////////////
@@ -120,5 +123,17 @@ TechOptionsMenuClass::On_Destroy (void)
 	//	Apply any system settings we modified
 	//
 	SystemSettings::Apply_All ();
+
+	//
+	//	Check if video settings changed and need restart
+	//
+	if (DlgConfigVideoTabClass::Needs_Restart()) {
+		DlgConfigVideoTabClass::Clear_Needs_Restart();
+		DlgMsgBox::DoDialog(
+			L"Restart Required",
+			L"Resolution settings have been saved.\n\nPlease restart the game for the changes to take effect.",
+			DlgMsgBox::Okay);
+	}
+
 	return ;
 }

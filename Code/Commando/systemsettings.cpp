@@ -536,8 +536,9 @@ public:
 	virtual	int Get_Enum( void ) { return WW3D::Get_NPatches_Level(); }
 	virtual	void Set_Enum( int selection ) {
 		WW3D::Set_NPatches_Level( selection );
+		// D3D9: Software tessellation works even without hardware support
 		if (DX8Wrapper::Get_Current_Caps() && !DX8Wrapper::Get_Current_Caps()->Support_NPatches()) {
-			Name="NPatches (NOT SUPPORTED BY HARDWARE)";
+			Name="NPatches (Software Mode)";
 		}
 	}
 	virtual	int Get_Enum_Count( void ) { return sizeof(names)/sizeof(char*); }

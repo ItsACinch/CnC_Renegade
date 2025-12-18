@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(git ls-tree:*)",
+      "mcp__rag__rag_ingest",
+      "Bash(cmake:*)",
+      "mcp__rag__rag_query",
+      "Bash(cat:*)",
+      "Bash(ls:*)",
+      "Bash(copy:*)",
+      "Bash(dir:*)",
+      "Bash(mklink /J Data \"D:\\SteamLibrary\\steamapps\\common\\Command & Conquer Renegade\\Data\")",
+      "Bash(cmd.exe:*)",
+      "Bash(powershell.exe:*)",
+      "Bash(findstr:*)",
+      "Bash(xxd:*)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe\" ./Code/commando.sln -t:Commando -p:Configuration=Release -p:Platform=Win32 -v:minimal)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe\" \"D:/repos/FunNGames/CnC_Renegade/Code/commando.sln\" -t:Commando -p:Configuration=Release -p:Platform=Win32 -v:minimal)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe\" \"D:/repos/FunNGames/CnC_Renegade/build/Renegade.sln\" -t:Commando -p:Configuration=Release -p:Platform=Win32 -v:minimal)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe\" \"D:/repos/FunNGames/CnC_Renegade/build/Renegade.sln\" -t:renegade -p:Configuration=Release -p:Platform=Win32 -v:minimal)",
+      "Bash(git checkout:*)",
+      "Bash(powershell -Command \"\n$content = Get-Content -Path ''combatgmode.cpp'' -Raw\n\n$diagLogFunc = @''\n/*\n** Direct diagnostic output for Release builds - captured by DebugView or log file\n*/\nstatic void DiagLog(const char* msg) {\n\tOutputDebugStringA(msg);\n\tOutputDebugStringA(\"\"\\n\"\");\n\t// Also try file output to multiple locations\n\tconst char* paths[] = {\n\t\t\"\"C:\\\\renegade_diag.txt\"\",\n\t\t\"\"D:\\\\renegade_diag.txt\"\",\n\t\t\"\"renegade_diag.txt\"\"\n\t};\n\tfor (int i = 0; i < 3; i++) {\n\t\tFILE* f = fopen(paths[i], \"\"a\"\");\n\t\tif (f) {\n\t\t\tfprintf(f, \"\"%s\\n\"\", msg);\n\t\t\tfflush(f);\n\t\t\tfclose(f);\n\t\t\tbreak;\n\t\t}\n\t}\n}\n\n''@\n\n# Insert the DiagLog function before Load_Level\n$oldPattern = ''#define LOADTIME_NETWORK_UPDATE if \\(!IS_SOLOPLAY\\) cNetwork::Update\\(\\)\\r?\\n\\r?\\n\\r?\\n/\\*\\r?\\n\\*\\*\\r?\\n\\*/\\r?\\nvoid CombatGameModeClass::Load_Level\\( void \\)''\n$newText = @''\n#define LOADTIME_NETWORK_UPDATE if (!IS_SOLOPLAY) cNetwork::Update()\n\n/*\n** Direct diagnostic output for Release builds - captured by DebugView or log file\n*/\nstatic void DiagLog(const char* msg) {\n\tOutputDebugStringA(msg);\n\tOutputDebugStringA(\"\"\\n\"\");\n\tconst char* paths[] = {\n\t\t\"\"C:\\renegade_diag.txt\"\",\n\t\t\"\"D:\\renegade_diag.txt\"\",\n\t\t\"\"renegade_diag.txt\"\"\n\t};\n\tfor (int i = 0; i < 3; i++) {\n\t\tFILE* f = fopen(paths[i], \"\"a\"\");\n\t\tif (f) {\n\t\t\tfprintf(f, \"\"%s\\n\"\", msg);\n\t\t\tfflush(f);\n\t\t\tfclose(f);\n\t\t\tbreak;\n\t\t}\n\t}\n}\n\n/*\n**\n*/\nvoid CombatGameModeClass::Load_Level( void )\n''@\n\n$content = $content -replace $oldPattern, $newText\nSet-Content -Path ''combatgmode.cpp'' -Value $content -NoNewline\nWrite-Host ''Done''\n\")",
+      "Bash(powershell -Command \"\n$content = Get-Content -Path ''combatgmode.cpp'' -Raw\n\n# Add DiagLog at start of Load_Level\n$content = $content -replace ''(void CombatGameModeClass::Load_Level\\( void \\)\\r?\\n\\{)\\r?\\n(\\t.*WWLOG_PREPARE)'', ''$1\n\tDiagLog(\"\"=== Load_Level START ===\"\");\n$2''\n\n# Add DiagLog before getting map name  \n$content = $content -replace ''(\\tDebug_Say\\(\\(\"\"CombatGameModeClass::Load_Level\\\\n\"\"\\)\\);\\r?\\n)\\r?\\n(\\tConsoleBox.Print)'', ''$1\n\tDiagLog(\"\"Getting map name...\"\");\n$2''\n\n# Add DiagLog before creating LoadingScreenClass\n$content = $content -replace ''(\\tCombatManager::Set_Load_Progress\\(0\\);\\r?\\n)(\\tLoadingScreenClass)'', ''$1\tDiagLog(\"\"Creating LoadingScreenClass...\"\");\n$2''\n\n# Add DiagLog after creating LoadingScreenClass, before first render\n$content = $content -replace ''(\\tLoadingScreenClass loading_screen;.*\\r?\\n)(\\tloading_screen.Render)'', ''$1\tDiagLog(\"\"LoadingScreenClass created, about to render...\"\");\n$2''\n\nSet-Content -Path ''combatgmode.cpp'' -Value $content -NoNewline\nWrite-Host ''Done adding DiagLog calls''\n\")",
+      "Bash(powershell -Command \"\n$content = Get-Content -Path ''combatgmode.cpp'' -Raw\n\n# Add ''First render complete'' after first render\n$content = $content -replace ''(\\tloading_screen\\.Render\\(true\\);\\r?\\n)\\r?\\n(\\t// Hack load reg)'', ''$1\tDiagLog(\"\"First render complete\"\");\n\n$2''\n\n# Add before Pre_Load_Level\n$content = $content -replace ''(\\tg_is_loading = true;\\r?\\n)'', ''$1\tDiagLog(\"\"About to Pre_Load_Level...\"\");\n''\n\n# Add before Load_Level_Threaded\n$content = $content -replace ''(\\tTextureLoader::Suspend_Texture_Load\\(\\);\\r?\\n)\\r?\\n(\\tCombatManager::Load_Level_Threaded)'', ''$1\tDiagLog(\"\"About to start threaded load...\"\");\n$2''\n\nSet-Content -Path ''combatgmode.cpp'' -Value $content -NoNewline\nWrite-Host ''Done''\n\")",
+      "Bash(powershell -Command \"\n$content = Get-Content -Path ''combatgmode.cpp'' -Raw\n\n# Replace the DiagLog function to use TEMP folder\n$oldFunc = @''\nstatic void DiagLog\\(const char\\* msg\\) \\{\n\tOutputDebugStringA\\(msg\\);\n\tOutputDebugStringA\\(\"\"\\n\"\"\\);\n\tconst char\\* paths\\[\\] = \\{\n\t\t\"\"C:\\\\renegade_diag\\.txt\"\",\n\t\t\"\"D:\\\\renegade_diag\\.txt\"\",\n\t\t\"\"renegade_diag\\.txt\"\"\n\t\\};\n\tfor \\(int i = 0; i < 3; i\\+\\+\\) \\{\n\t\tFILE\\* f = fopen\\(paths\\[i\\], \"\"a\"\"\\);\n\t\tif \\(f\\) \\{\n\t\t\tfprintf\\(f, \"\"%s\\n\"\", msg\\);\n\t\t\tfflush\\(f\\);\n\t\t\tfclose\\(f\\);\n\t\t\tbreak;\n\t\t\\}\n\t\\}\n\\}\n''@\n\n$newFunc = @''\nstatic void DiagLog(const char* msg) {\n\tOutputDebugStringA(msg);\n\tOutputDebugStringA(\"\"\\n\"\");\n\t// Write to TEMP folder (always writable without admin)\n\tchar path[MAX_PATH];\n\tif (GetTempPathA(MAX_PATH, path)) {\n\t\tstrcat(path, \"\"renegade_diag.txt\"\");\n\t} else {\n\t\tstrcpy(path, \"\"renegade_diag.txt\"\");\n\t}\n\tFILE* f = fopen(path, \"\"a\"\");\n\tif (f) {\n\t\tfprintf(f, \"\"%s\\n\"\", msg);\n\t\tfflush(f);\n\t\tfclose(f);\n\t}\n}\n''@\n\n$content = $content -replace $oldFunc, $newFunc\nSet-Content -Path ''combatgmode.cpp'' -Value $content -NoNewline\nWrite-Host ''Done''\n\")",
+      "Bash(grep:*)",
+      "Bash(powershell -Command:*)"
+    ]
+  },
+  "enabledMcpjsonServers": [
+    "rag"
+  ],
+  "disabledMcpjsonServers": [
+    "supabase",
+    "qwen-coder",
+    "Playwright"
+  ]
+}

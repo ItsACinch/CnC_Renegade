@@ -1,5 +1,5 @@
 # WWAudio - Audio system
-# Miles Sound System integration (to be replaced with OpenAL in Phase 3)
+# Uses OpenAL Soft for audio playback (replaces proprietary Miles Sound System)
 
 file(GLOB WWAUDIO_SOURCES "*.cpp" "*.c")
 file(GLOB WWAUDIO_HEADERS "*.h")
@@ -9,7 +9,6 @@ add_library(wwaudio STATIC ${WWAUDIO_SOURCES} ${WWAUDIO_HEADERS})
 target_include_directories(wwaudio PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/Code
-    ${CMAKE_SOURCE_DIR}/Code/Miles6/include  # Original Miles SDK path
 )
 
 target_link_libraries(wwaudio PUBLIC
@@ -19,20 +18,8 @@ target_link_libraries(wwaudio PUBLIC
     ww3d2
 )
 
-# Miles Sound System library (Phase 3 will replace with OpenAL)
-# For now, link against stub or skip if not available
-if(EXISTS "${CMAKE_SOURCE_DIR}/Code/Miles6/lib/win/mss32.lib")
-    target_link_libraries(wwaudio PUBLIC
-        ${CMAKE_SOURCE_DIR}/Code/Miles6/lib/win/mss32.lib
-    )
-else()
-    message(WARNING "Miles Sound System SDK not found - audio will be stubbed")
-    target_compile_definitions(wwaudio PUBLIC AUDIO_STUB)
-endif()
-
-# Windows audio libraries
+# Windows audio libraries (dsound no longer needed with OpenAL)
 target_link_libraries(wwaudio PUBLIC
-    dsound
     winmm
 )
 

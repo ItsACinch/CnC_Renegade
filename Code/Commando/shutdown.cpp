@@ -168,17 +168,17 @@ static void Get_Detail_String(StringClass& str)
 
 		// NPatch level
 		str+="NPatch level: ";
-		if (DX8Wrapper::Get_Current_Caps() && DX8Wrapper::Get_Current_Caps()->Support_NPatches()) {
-			if (WW3D::Get_NPatches_Level()<=1) {
-				str+="Disabled\r\n";
-			}
-			else {
-				tmp.Format("%d\r\n",WW3D::Get_NPatches_Level());
-				str+=tmp;
-			}
+		if (WW3D::Get_NPatches_Level()<=1) {
+			str+="Disabled\r\n";
 		}
 		else {
-			str+="Not supported\r\n";
+			tmp.Format("%d", WW3D::Get_NPatches_Level());
+			str+=tmp;
+			// D3D9: Software tessellation works even without hardware support
+			if (DX8Wrapper::Get_Current_Caps() && !DX8Wrapper::Get_Current_Caps()->Support_NPatches()) {
+				str+=" (Software Mode)";
+			}
+			str+="\r\n";
 		}
 
 		int w;

@@ -266,6 +266,7 @@ public:
 	static void Set_DX8_Light(int index,D3DLIGHT8* light);
 	static void Set_DX8_Render_State(D3DRENDERSTATETYPE state, unsigned value);
 	static void Set_DX8_Texture_Stage_State(unsigned stage, D3DTEXTURESTAGESTATETYPE state, unsigned value);
+	static void Set_NPatches_Mode(float segments);  // D3D9: replaces D3DRS_PATCHSEGMENTS
 	static void Set_DX8_Texture(unsigned int stage, IDirect3DBaseTexture8* texture);
 	static void Set_Light_Environment(LightEnvironmentClass* light_env);
 	static void Set_Fog(bool enable, const Vector3 &color, float start, float end);
@@ -690,6 +691,14 @@ WWINLINE void DX8Wrapper::Set_DX8_Texture_Stage_State(unsigned stage, D3DTEXTURE
 		DX8CALL(SetTextureStageState( stage, state, value ));
 	}
 	DX8_RECORD_TEXTURE_STAGE_STATE_CHANGE();
+}
+
+WWINLINE void DX8Wrapper::Set_NPatches_Mode(float segments)
+{
+	// D3D9: Use SetNPatchMode instead of D3DRS_PATCHSEGMENTS render state
+	// segments=1.0f disables N-Patches, higher values enable tessellation
+	if (!Is_Initted() || !_Get_D3D_Device8()) return;
+	DX8CALL(SetNPatchMode(segments));
 }
 
 WWINLINE void DX8Wrapper::Set_DX8_Texture(unsigned int stage, IDirect3DBaseTexture8* texture)

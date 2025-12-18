@@ -74,7 +74,10 @@ class SoundHandleClass;
 //
 //	Typedefs
 //
+#ifndef MILES_HANDLE_DEFINED
+#define MILES_HANDLE_DEFINED
 typedef unsigned long MILES_HANDLE;
+#endif
 
 typedef enum
 {
@@ -88,7 +91,10 @@ typedef enum
 //	Constants
 //
 /////////////////////////////////////////////////////////////////////////////////
+#ifndef INVALID_MILES_HANDLE_DEFINED
+#define INVALID_MILES_HANDLE_DEFINED
 const MILES_HANDLE INVALID_MILES_HANDLE			= (MILES_HANDLE)-1;
+#endif
 const int INFINITE_LOOPS								= 0;
 
 

@@ -501,16 +501,18 @@ DialogButtonClass::On_Kill_Focus (DialogControlClass *focus)
 //	On_Key_Down
 //
 ////////////////////////////////////////////////////////////////
-void
+bool
 DialogButtonClass::On_Key_Down (uint32 key_id, uint32 key_data)
 {
+	bool handled = false;
 	switch (key_id)
 	{
 		case VK_RETURN:
 		case VK_SPACE:
 			Parent->On_Command (ID, BN_CLICKED, 0);
+			handled = true;
 			break;
 	}
 
-	return ;
+	return handled;
 }

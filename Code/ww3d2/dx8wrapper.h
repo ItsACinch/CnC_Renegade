@@ -224,6 +224,9 @@ public:
 
 	static void Clear(bool clear_color, bool clear_z_stencil, const Vector3 &color, float z=1.0f, unsigned int stencil=0);
 
+	// Screenshot support - saves backbuffer to BMP file in specified folder
+	static bool Save_Screenshot(const char* folder_path);
+
 	static void	Set_Viewport(CONST D3DVIEWPORT8* pViewport);
 
 	static void Set_Vertex_Buffer(const VertexBufferClass* vb);
@@ -677,7 +680,15 @@ WWINLINE void DX8Wrapper::Set_DX8_Texture_Stage_State(unsigned stage, D3DTEXTURE
 #endif
 
 	TextureStageStates[stage][(unsigned int)state]=value;
-	DX8CALL(SetTextureStageState( stage, state, value ));
+
+	// D3D9: Some D3D8 texture stage states became sampler states
+	// Check if this is a sampler state and call SetSamplerState instead
+	if (D3D8_Is_Sampler_State(state)) {
+		D3DSAMPLERSTATETYPE samplerState = D3D8_TSS_To_D3D9_Sampler(state);
+		DX8CALL(SetSamplerState(stage, samplerState, value));
+	} else {
+		DX8CALL(SetTextureStageState( stage, state, value ));
+	}
 	DX8_RECORD_TEXTURE_STAGE_STATE_CHANGE();
 }
 
@@ -694,21 +705,8 @@ WWINLINE void DX8Wrapper::Set_DX8_Texture(unsigned int stage, IDirect3DBaseTextu
 	DX8_RECORD_TEXTURE_CHANGE();
 }
 
-WWINLINE void DX8Wrapper::_Copy_DX8_Rects(
-  IDirect3DSurface8* pSourceSurface,
-  CONST RECT* pSourceRectsArray,
-  UINT cRects,
-  IDirect3DSurface8* pDestinationSurface,
-  CONST POINT* pDestPointsArray
-)
-{
-	DX8CALL(CopyRects(
-  pSourceSurface,
-  pSourceRectsArray,
-  cRects,
-  pDestinationSurface,
-  pDestPointsArray));
-}
+// _Copy_DX8_Rects implementation moved to dx8wrapper.cpp
+// Uses D3DXLoadSurfaceFromSurface which works between any memory pools
 
 WWINLINE Vector4 DX8Wrapper::Convert_Color(unsigned color)
 {
@@ -721,7 +719,8 @@ WWINLINE Vector4 DX8Wrapper::Convert_Color(unsigned color)
 	return col;
 }
 
-#if 0
+// Use portable C version - inline assembly corrupts callee-saved registers
+#if 1
 WWINLINE unsigned int DX8Wrapper::Convert_Color(const Vector3& color, const float alpha)
 {
 	WWASSERT(color.X<=1.0f);
@@ -747,6 +746,21 @@ WWINLINE unsigned int DX8Wrapper::Convert_Color(const Vector4& color)
 	WWASSERT(color.W>=0.0f);
 
 	return D3DCOLOR_COLORVALUE(color.X,color.Y,color.Z,color.W);
+}
+
+WWINLINE void DX8Wrapper::Clamp_Color(Vector4& color)
+{
+	for (int i=0;i<4;++i) {
+		float f=(color[i]<0.0f) ? 0.0f : color[i];
+		color[i]=(f>1.0f) ? 1.0f : f;
+	}
+}
+
+WWINLINE unsigned int DX8Wrapper::Convert_Color_Clamp(const Vector4& color)
+{
+	Vector4 clamped_color=color;
+	DX8Wrapper::Clamp_Color(clamped_color);
+	return Convert_Color(reinterpret_cast<const Vector3&>(clamped_color),clamped_color[3]);
 }
 #else
 

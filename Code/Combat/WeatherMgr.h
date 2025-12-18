@@ -144,8 +144,8 @@ class WeatherSystemClass : public RenderObjClass
 
 		virtual bool Update (WindClass *wind, const Vector3 &cameraposition);
 
-	protected:
-
+	// These structs must be public for AutoPoolClass DEFINE_AUTO_POOL macro
+	public:
 		enum {
 			VERTICES_PER_TRIANGLE = 3,
 			MAX_IB_PARTICLE_COUNT = 2048,
@@ -186,6 +186,7 @@ class WeatherSystemClass : public RenderObjClass
 				unsigned char	 Pad [2];				// Pad structure to 4-byte multiple.
 		};
 
+	protected:
 		// Utility functions.
 		float Spawn_Count (float time) {return (ParticleDensity * EmitterSize * EmitterSize * time);}
 		bool	Can_Spawn (const RayStruct *rayptr) {return (rayptr->EndPosition.Z < EmitterPosition.Z);}

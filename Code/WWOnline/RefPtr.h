@@ -216,7 +216,7 @@ template<typename Type> class RefPtr :
 		// Template function for implicit conversion ops
 		template<typename NewType>
 		inline operator RefPtr<NewType>()
-			{return RefPtr<NewType>(GetRefObject());}
+			{return RefPtr<NewType>(static_cast<NewType*>(GetRefObject()));}
 
 		// These are public mostly because I can't seem to declare rc_ptr<Other> as a friend
 		inline Type* const ReferencedObject(void)
@@ -238,9 +238,12 @@ template<typename Type> class RefPtr :
 			}
 
 	private:
-		friend RefPtr<Type> Dynamic_Cast(RefPtrBase&);
-		friend RefPtr<Type> Reinterpret_Cast(RefPtrBase&);
-		friend RefPtr<Type> Const_Cast(RefPtrConst<Type>&);
+		template<typename Derived>
+		friend RefPtr<Derived> Dynamic_Cast(RefPtrBase&);
+		template<typename T>
+		friend RefPtr<T> Reinterpret_Cast(RefPtrBase&);
+		template<typename T>
+		friend RefPtr<T> Const_Cast(RefPtrConst<T>&);
 	};
 
 
@@ -249,7 +252,7 @@ template<typename Type> class RefPtrConst :
 	{
 	public:
 		RefPtrConst() :
-				RefPtrConst()
+				RefPtrBase()
 			{}
 
 		template<typename Derived>
@@ -326,12 +329,13 @@ template<typename Type> class RefPtrConst :
 		RefPtrConst(const Type* object) :
 				RefPtrBase()
 			{
-			Attach(static_cast<RefCounted*>(object));
+			Attach(static_cast<RefCounted*>(const_cast<Type*>(object)));
 			}
 
 		const RefPtrConst<Type>& operator=(const Type* object)
 			{
-			Attach(static_cast<RefCounted*>(object));
+			Attach(static_cast<RefCounted*>(const_cast<Type*>(object)));
+			return *this;
 			}
 	};
 
@@ -358,7 +362,7 @@ template<typename Type>
 RefPtr<Type> Const_Cast(RefPtrConst<Type>& rhs)
 	{
 	RefPtr<Type> object;
-	object.Attach(static_cast<RefCounted*>(rhs.ReferencedObject()));
+	object.Attach(static_cast<RefCounted*>(const_cast<Type*>(rhs.ReferencedObject())));
 	return object;
 	}
 

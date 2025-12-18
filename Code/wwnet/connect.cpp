@@ -615,7 +615,9 @@ bool cConnection::Receive_Packet()
 				LaggedPackets.Delete(p);
 				LaggedPacketTimes.Delete(p);
 				ret_code = LaggedPacketRetCodes[p];
-				LaggedPacketRetCodes.Delete(p);
+				// Use explicit member function pointer to resolve Delete(int index) vs Delete(const int&) ambiguity
+				typedef bool (DynamicVectorClass<int>::*DeleteByIndexFn)(int);
+				(LaggedPacketRetCodes.*static_cast<DeleteByIndexFn>(&DynamicVectorClass<int>::Delete))(p);
 				break;
 			}
 		}

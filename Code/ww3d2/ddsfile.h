@@ -26,8 +26,9 @@
 #include "always.h"
 #include "ww3dformat.h"
 #include "wwstring.h"
+#include "d3d8.h"
 
-struct IDirect3DSurface8;
+// IDirect3DSurface8 is now defined via d3d8.h compat header
 
 // ----------------------------------------------------------------------------
 //

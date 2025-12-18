@@ -59,12 +59,13 @@
 			is_begin ? On_##state##_Begin : NULL,									\
 			is_end ? On_##state##_End : NULL);	*/
 
+// Modern C++ compliant version - requires class name parameter
 #define ADD_STATE_TO_MACHINE(machine, state)		\
 		machine.Add_State (								\
-			On_##state##_Think,							\
-			On_##state##_Request_End,					\
-			On_##state##_Begin,							\
-			On_##state##_End);
+			&ThisClass::On_##state##_Think,			\
+			&ThisClass::On_##state##_Request_End,	\
+			&ThisClass::On_##state##_Begin,			\
+			&ThisClass::On_##state##_End);
 
 
 		//machine.Add_State (On_##state_Think, On_##state_Request_End, On_##state_Begin, On_##state_End);
@@ -258,10 +259,10 @@ public:
 	///////////////////////////////////////////////////////////////////
 	void	Add_State
 	(
-		STATE_OBJ::THINK_PTR think_ptr,
-		STATE_OBJ::REQUEST_END_PTR request_ptr,
-		STATE_OBJ::BEGIN_PTR begin_ptr,
-		STATE_OBJ::END_PTR end_ptr
+		typename STATE_OBJ::THINK_PTR think_ptr,
+		typename STATE_OBJ::REQUEST_END_PTR request_ptr,
+		typename STATE_OBJ::BEGIN_PTR begin_ptr,
+		typename STATE_OBJ::END_PTR end_ptr
 	)
 	{
 		StateClass<T> state;

@@ -20,6 +20,7 @@
 #include "texture.h"
 #include "dx8wrapper.h"
 #include <D3dx8core.h>
+#include <d3dx9.h>  // For D3DXLoadSurfaceFromSurface
 
 static unsigned missing_image_width=128;
 static unsigned missing_image_height=128;
@@ -46,13 +47,18 @@ IDirect3DSurface8* MissingTexture::_Create_Missing_Surface()
 	::ZeroMemory(&texture_surface_desc, sizeof(D3DSURFACE_DESC));
 	DX8_ErrorCode(texture_surface->GetDesc(&texture_surface_desc));
 	
-	IDirect3DSurface8 *surface = NULL;	
-	DX8CALL(CreateImageSurface(
-		texture_surface_desc.Width, 
-		texture_surface_desc.Height, 
-		texture_surface_desc.Format, 
-		&surface));
-	DX8CALL(CopyRects(texture_surface, NULL, 0, surface, NULL));
+	IDirect3DSurface8 *surface = NULL;
+	// D3D9: CreateImageSurface was replaced with CreateOffscreenPlainSurface
+	DX8CALL(CreateOffscreenPlainSurface(
+		texture_surface_desc.Width,
+		texture_surface_desc.Height,
+		texture_surface_desc.Format,
+		D3DPOOL_SYSTEMMEM,
+		&surface,
+		NULL));
+	// D3D9: CopyRects was replaced - use GetRenderTargetData for DEFAULT->SYSTEMMEM
+	// For texture surfaces, use D3DXLoadSurfaceFromSurface or manual lock/copy
+	DX8_ErrorCode(D3DXLoadSurfaceFromSurface(surface, NULL, NULL, texture_surface, NULL, NULL, D3DX_FILTER_NONE, 0));
 	texture_surface->Release();
 	return surface;
 }

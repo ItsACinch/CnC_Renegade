@@ -25,9 +25,10 @@
 
 #include "always.h"
 #include "texture.h"
+#include "d3d8.h"
 
 class StringClass;
-struct IDirect3DTexture8;
+// IDirect3DTexture8 is now defined via d3d8.h compat header
 class TextureLoadTaskClass;
 
 class TextureLoader

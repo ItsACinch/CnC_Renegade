@@ -300,12 +300,14 @@ void	CombatManager::Scene_Init( void )
 */
 void	CombatManager::Pre_Load_Level( bool render_available )
 {
+	DiagLogClass::Log_Early("Pre_Load_Level: entered");
 	MultiplayRenderingAllowed = true;
 	if ( !IS_MISSION && !I_Am_Server() ) {
 		MultiplayRenderingAllowed = false;
 	}
 
 	HUDClass::Enable( true );
+	DiagLogClass::Log_Early("Pre_Load_Level: HUD enabled");
 	HUDClass::Reset();
 
 	IsGamePaused = false;
@@ -313,8 +315,10 @@ void	CombatManager::Pre_Load_Level( bool render_available )
 	GameObjObserverManager::Reset();
 
 	CoverManager::Init();
+	DiagLogClass::Log_Early("Pre_Load_Level: CoverManager::Init");
 
 	GameObjManager::Init();
+	DiagLogClass::Log_Early("Pre_Load_Level: GameObjManager::Init");
 
 	BulletManager::Init();
 
@@ -323,14 +327,19 @@ void	CombatManager::Pre_Load_Level( bool render_available )
 	cPacket::Init_Encoder();
 
 	BackgroundScene = NEW_REF (SimpleSceneClass, ());
+	DiagLogClass::Log_Early("Pre_Load_Level: BackgroundScene created");
 
 	SoundEnvironment = NEW_REF (SoundEnvironmentClass, ());
+	DiagLogClass::Log_Early("Pre_Load_Level: SoundEnvironment created");
 
 	BackgroundMgrClass::Init (BackgroundScene, SoundEnvironment, render_available);
+	DiagLogClass::Log_Early("Pre_Load_Level: BackgroundMgrClass::Init");
 
 	WeatherMgrClass::Init (SoundEnvironment);
+	DiagLogClass::Log_Early("Pre_Load_Level: WeatherMgrClass::Init");
 
 	WeaponViewClass::Init();
+	DiagLogClass::Log_Early("Pre_Load_Level: WeaponViewClass::Init");
 
 	SmartGameObj::Set_Global_Sight_Range_Scale( 1.0f );
 //	SoundSystem::Set_Global_Listener_Scale( 1.0f );

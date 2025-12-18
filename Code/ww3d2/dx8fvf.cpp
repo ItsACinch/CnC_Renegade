@@ -18,7 +18,7 @@
 
 #include "dx8fvf.h"
 #include "wwstring.h"
-#include <D3dx8core.h>
+#include "d3dx8.h"  // D3DX8 compatibility header (provides D3DXGetFVFVertexSize)
 
 static unsigned Get_FVF_Vertex_Size(unsigned FVF)
 {

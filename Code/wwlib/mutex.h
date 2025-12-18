@@ -25,6 +25,7 @@
 
 #include "always.h"
 #include "thread.h"
+#include <intrin.h>  // For _InterlockedCompareExchange
 
 
 // Always use mutex or critical section when accessing the same data from multiple threads!
@@ -121,23 +122,11 @@ class FastCriticalSectionClass
 
 	void Thread_Safe_Set_Flag()
 	{
-		volatile unsigned& nFlag=Flag;
-
-		#define ts_lock _emit 0xF0
-		assert(((unsigned)&nFlag % 4) == 0);
-
-		__asm mov ebx, [nFlag]
-		__asm ts_lock
-		__asm bts dword ptr [ebx], 0
-		__asm jc The_Bit_Was_Previously_Set_So_Try_Again
-		return;
-
-		The_Bit_Was_Previously_Set_So_Try_Again:
-		ThreadClass::Switch_Thread();
-		__asm mov ebx, [nFlag]
-		__asm ts_lock
-		__asm bts dword ptr [ebx], 0
-		__asm jc  The_Bit_Was_Previously_Set_So_Try_Again
+		// Use Windows interlocked functions for cross-platform compatibility (x86/x64)
+		// Original code used inline x86 assembly with BTS (bit test and set)
+		while (_InterlockedCompareExchange((volatile long*)&Flag, 1, 0) != 0) {
+			ThreadClass::Switch_Thread();
+		}
 	}
 
 	WWINLINE void Thread_Safe_Clear_Flag()

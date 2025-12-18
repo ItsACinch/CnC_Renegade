@@ -47,10 +47,11 @@
 #include "wwdebug.h"
 #include "refcount.h"
 #include "sphere.h"
+#include "d3d8.h"
 
 class DX8Wrapper;
 class SortingRendererClass;
-struct IDirect3DIndexBuffer8;
+// IDirect3DIndexBuffer8 is now defined via d3d8.h compat header
 class DX8IndexBufferClass;
 class SortingIndexBufferClass;
 

@@ -81,11 +81,13 @@ MPWolQuickMatchMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 			break;
 
 		case IDC_MP_WOL_QUICK_MATCH_OPTIONS_BUTTON:
+#ifdef QUICKMATCH_OPTIONS
 			START_DIALOG (MPWolQuickMatchOptionsMenuClass);
+#endif
 			break;
 
 		case IDC_MP_WOL_ADVANCED_LISTINGS_BUTTON:
-			START_DIALOG (MPWolGameListMenuClass);
+			MPWolGameListMenuClass::DoDialog();
 			break;
 	}
 

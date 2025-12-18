@@ -152,10 +152,10 @@ bool SList<T>::Insert_Before(T *newnode, T   *oldnode)
 	// Verify that we found the entry as it might not have been in the list.
 	// Note: Cur will be valid because it wont be assigned unless Next is
 	//  valid.
-	if (cur->Next() != NULL && cur->Next()->Data() == oldnode) {  
+	if (cur->Next() != NULL && cur->Next()->Data() == oldnode) {
 		SLNode<T> *temp	= new SLNode<T> (newnode);
-		temp->NodeNext			= cur->Next();
-		cur->NodeNext			= temp;
+		temp->Set_Next(cur->Next());
+		cur->Set_Next(temp);
 		return(true);
 	}
 	return(false);
@@ -193,14 +193,14 @@ bool SList<T>::Insert_After(T *newnode, T *oldnode)
 	for (cur = HeadNode; cur && cur->Data() != oldnode; cur = cur->Next()) {}
 
 	// Did we find the data we want to insert after?
-	if (cur != NULL  && cur->Data() == oldnode) {   
+	if (cur != NULL  && cur->Data() == oldnode) {
 		if (cur == TailNode) {        // Inserting after tail
 			return(Add_Tail(newnode));
 		}
 
 		SLNode<T> *temp		= new SLNode<T>(newnode);
-		temp->NodeNext			= cur->Next();
-		cur->NodeNext			= temp;
+		temp->Set_Next(cur->Next());
+		cur->Set_Next(temp);
 		return true;
 	} 
 	return false;
@@ -261,9 +261,9 @@ bool SList<T>::Remove(T *element)
 	// Verify that we found the entry as it might not have been in the list.
 	// Note: Cur will be valid because it wont be assigned unless Next is
 	//  valid.
-	if (cur->Next() != NULL && cur->Next()->Data() == element) {  
+	if (cur->Next() != NULL && cur->Next()->Data() == element) {
 		SLNode<T> *temp	= cur->Next();
-		cur->NodeNext		= temp->Next();
+		cur->Set_Next(temp->Next());
 		if (temp == TailNode) TailNode = cur;
 		delete temp;
 		return true;
@@ -428,7 +428,7 @@ bool SList<T>::Add_Head(T *data)
 	if (!data) return false;
 
 	SLNode<T> *temp			= new SLNode<T>(data);
-	temp->NodeNext				= HeadNode;
+	temp->Set_Next(HeadNode);
 	HeadNode						= temp;
 	if (!TailNode) TailNode	= temp;
 	return true;
@@ -456,11 +456,11 @@ bool SList<T>::Add_Head(SList<T>& list)
 	SLNode<T> *addpoint = NULL;
 
 	// We traverse list backwards so nodes are added in right order.
-	for (SLNode<T> *cur = list.HeadNode; cur; cur = cur->Next()) 
+	for (SLNode<T> *cur = list.HeadNode; cur; cur = cur->Next())
 	if (addpoint) {
 		SLNode<T> *temp   = new SLNode<T>(cur->Data());
-		temp->NodeNext = addpoint->NodeNext;
-		addpoint->NodeNext = temp;
+		temp->Set_Next(addpoint->Next());
+		addpoint->Set_Next(temp);
 		addpoint = temp;
 	} else {
 		Add_Head(cur->Data());
@@ -491,7 +491,7 @@ bool SList<T>::Add_Tail(T *data)
 	if (HeadNode == NULL) {				// empty list
 		HeadNode = TailNode	= temp;
 	} else {									// non-empty list
-		TailNode->NodeNext	= temp;
+		TailNode->Set_Next(temp);
 		TailNode					= temp;
 	}
 	return true;

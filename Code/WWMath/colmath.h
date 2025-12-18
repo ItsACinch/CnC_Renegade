@@ -306,7 +306,7 @@ inline CollisionMath::OverlapType CollisionMath::eval_overlap_collision(const Ca
 #define TRACK_COLLISION_OBBOX_AABOX			
 #define TRACK_COLLISION_OBBOX_AABOX_HIT	
 #define TRACK_COLLISION_OBBOX_OBBOX			
-#define TRACK_COLLISION_OBBOX_OBBOX_HIT	
+#define TRACK_COLLISION_OBBOX_OBBOX_HIT
 #endif
 
 #endif // COLMATH_H

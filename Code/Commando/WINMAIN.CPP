@@ -121,8 +121,6 @@ void Set_Working_Directory(char *old_path, char *new_path);
 int Start_Application( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow );
 void Set_Working_Directory(HINSTANCE hInstance);
 
-#include "packet.h"
-
 #ifndef _MSC_VER
 long Top_Level_Exception_Filter(EXCEPTION_POINTERS *e_info)
 {
@@ -470,29 +468,17 @@ int Start_Application( HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /
 		Register_Application_Exception_Callback(&Application_Exception_Callback);
 		Register_Application_Version_Callback(&BuildInfoClass::Composite_Build_Info);
 
-#ifdef _MSC_VER
 		/*
-		** The __try/__except construct is part of the WIN32 interface. This is not the same
-		** as C++ exception handling. There is no additional code overhead required
-		** with this interface and the compilers exception handling options should be disabled
-		** to prevent the compiler generating additional stack unwinding code.
+		** Use SetUnhandledExceptionFilter for exception handling.
+		** Note: __try/__except was used in VC6, but modern MSVC doesn't allow
+		** mixing SEH with C++ objects that require stack unwinding.
 		*/
-		__try {
-#else
-		SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER) &Top_Level_Exception_Filter);
-#endif
-			WWDEBUG_SAY(("Game_Main_Loop\n"));
-			exitCode = Game_Main_Loop();
+		SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER) &Exception_Handler);
 
-#ifdef _MSC_VER
-		} __except(Exception_Handler(GetExceptionCode(), GetExceptionInformation())) {};
+		WWDEBUG_SAY(("Game_Main_Loop\n"));
+		exitCode = Game_Main_Loop();
 
-		/*
-		** Set the exception filter to use on shutdown.
-		*/
-#else
-		SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER) &Top_Level_Exception_Filter);
-#endif
+		SetUnhandledExceptionFilter(NULL);
 #ifdef WWDEBUG
 	}
 #endif //WWDEBUG
@@ -585,6 +571,25 @@ long FAR PASCAL Main_Window_Proc( HWND hwnd, UINT message, WPARAM wParam, LPARAM
 		case WM_CHAR:
 			//Debug_Say(("WM_CHAR %d\n", wParam));
 			Input::Console_Add_Key( wParam );
+			break;
+
+		/*
+		** Screenshot capture on Print Screen key
+		*/
+		case WM_KEYUP:
+			if (wParam == VK_SNAPSHOT) {
+				// Get %TEMP% folder and append Renegade subfolder
+				char temp_path[MAX_PATH];
+				char screenshot_path[MAX_PATH];
+				GetTempPathA(MAX_PATH, temp_path);
+				sprintf(screenshot_path, "%sRenegade", temp_path);
+
+				if (DX8Wrapper::Save_Screenshot(screenshot_path)) {
+					WWDEBUG_SAY(("Screenshot saved to %s\n", screenshot_path));
+				} else {
+					WWDEBUG_SAY(("Failed to save screenshot\n"));
+				}
+			}
 			break;
 
 		/*

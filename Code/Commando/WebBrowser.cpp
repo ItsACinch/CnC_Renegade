@@ -42,6 +42,7 @@
 #include <WWDebug\WWDebug.h>
 #include "win.h"
 #include "_globals.h"
+#include <shellapi.h>
 
 WebBrowser* WebBrowser::_mInstance = NULL;
 

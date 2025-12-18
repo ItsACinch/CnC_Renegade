@@ -53,10 +53,10 @@
 #include "wwstring.h"
 
 #include <string.h>
+#include "d3d8.h"  // For D3DMATERIAL8 (mapped to D3DMATERIAL9)
 
 class ChunkLoadClass;
 class ChunkSaveClass;
-struct _D3DMATERIAL8;
 
 /**
 ** VertexMaterialClass

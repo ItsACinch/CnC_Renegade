@@ -47,6 +47,7 @@
 #include "wwdebug.h"
 #include "refcount.h"
 #include "dx8fvf.h"
+#include "d3d8.h"
 
 const unsigned dynamic_fvf_type=D3DFVF_XYZ|D3DFVF_NORMAL|D3DFVF_TEX2|D3DFVF_DIFFUSE;
 
@@ -58,7 +59,7 @@ class Vector4;
 class StringClass;
 class DX8VertexBufferClass;
 class FVFInfoClass;
-struct IDirect3DVertexBuffer8;
+// IDirect3DVertexBuffer8 is now defined via d3d8.h compat header
 class VertexBufferClass;
 struct VertexFormatXYZNDUV2;
 

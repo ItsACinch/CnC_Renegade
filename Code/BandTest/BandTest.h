@@ -46,8 +46,12 @@
 ** that uses this DLL. This way any other project whose source files include this file see
 ** BANDTEST_API functions as being imported from a DLL, wheras this DLL sees symbols
 ** defined with this macro as being exported.
+**
+** For static library builds, BANDTEST_API should be empty.
 */
-#ifdef BANDTEST_EXPORTS
+#ifdef BANDTEST_STATIC
+#define BANDTEST_API
+#elif defined(BANDTEST_EXPORTS)
 #define BANDTEST_API __declspec(dllexport)
 #else
 #define BANDTEST_API __declspec(dllimport)

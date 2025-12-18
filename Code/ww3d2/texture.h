@@ -48,9 +48,10 @@
 #include "surfaceclass.h"
 #include "ww3dformat.h"
 #include "wwstring.h"
+#include "d3d8.h"
 
 class DX8Wrapper;
-struct IDirect3DTexture8;
+// IDirect3DTexture8 is now defined via d3d8.h compat header
 class TextureLoader;
 class LoaderThreadClass;
 class DX8TextureManagerClass;

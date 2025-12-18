@@ -48,6 +48,7 @@
 #include "audiblesound.h"
 #include "explosion.h"
 #include "phys.h"
+#include "colmathaabox.h"
 #include "pscene.h"
 #include "waypath.h"
 #include "waypoint.h"
@@ -451,10 +452,10 @@ MendozaBossGameObjClass::MendozaBossGameObjClass (void)	:
 	//
 	//	Register the camera states with its state machine
 	//
-	CameraState.Add_State (NULL,													NULL,		On_CAMERA_STATE_NORMAL_Begin,					NULL);
-	CameraState.Add_State (On_CAMERA_STATE_FACE_ZOOM_Think,				NULL,		On_CAMERA_STATE_FACE_ZOOM_Begin,				NULL);
-	CameraState.Add_State (On_CAMERA_STATE_WAYPATH_FOLLOW_Think,		NULL,		On_CAMERA_STATE_WAYPATH_FOLLOW_Begin,		NULL);
-	CameraState.Add_State (On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Think,	NULL,		On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Begin,	NULL);	
+	CameraState.Add_State (NULL,															NULL,		&ThisClass::On_CAMERA_STATE_NORMAL_Begin,					NULL);
+	CameraState.Add_State (&ThisClass::On_CAMERA_STATE_FACE_ZOOM_Think,				NULL,		&ThisClass::On_CAMERA_STATE_FACE_ZOOM_Begin,				NULL);
+	CameraState.Add_State (&ThisClass::On_CAMERA_STATE_WAYPATH_FOLLOW_Think,		NULL,		&ThisClass::On_CAMERA_STATE_WAYPATH_FOLLOW_Begin,		NULL);
+	CameraState.Add_State (&ThisClass::On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Think,	NULL,		&ThisClass::On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Begin,	NULL);	
 	CameraState.Set_State (CAMERA_STATE_NORMAL);
 
 	//

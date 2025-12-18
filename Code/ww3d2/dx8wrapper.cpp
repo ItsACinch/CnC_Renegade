@@ -162,9 +162,10 @@ static DynamicVectorClass<StringClass>					_RenderDeviceShortNameTable;
 static DynamicVectorClass<RenderDeviceDescClass>	_RenderDeviceDescriptionTable;
 
 
-typedef IDirect3D8* (WINAPI *Direct3DCreate8Type) (UINT SDKVersion);
-Direct3DCreate8Type	Direct3DCreate8Ptr = NULL;
-HINSTANCE D3D8Lib = NULL;
+// Note: IDirect3D8 is mapped to IDirect3D9 via d3d8.h compatibility header
+typedef IDirect3D8* (WINAPI *Direct3DCreate9Type) (UINT SDKVersion);
+Direct3DCreate9Type	Direct3DCreate9Ptr = NULL;
+HINSTANCE D3D9Lib = NULL;
 
 
 /***********************************************************************************
@@ -245,18 +246,18 @@ bool DX8Wrapper::Init(void * hwnd, bool lite)
 	Invalidate_Cached_Render_States();
 
 	if (!lite) {
-		D3D8Lib = LoadLibrary("D3D8.DLL");
+		D3D9Lib = LoadLibrary("D3D9.DLL");
 
-		if (D3D8Lib == NULL) return false;
+		if (D3D9Lib == NULL) return false;
 
-		Direct3DCreate8Ptr = (Direct3DCreate8Type) GetProcAddress(D3D8Lib, "Direct3DCreate8");
-		if (Direct3DCreate8Ptr) {
+		Direct3DCreate9Ptr = (Direct3DCreate9Type) GetProcAddress(D3D9Lib, "Direct3DCreate9");
+		if (Direct3DCreate9Ptr) {
 
 			/*
 			** Create the D3D interface object
 			*/
-			WWDEBUG_SAY(("Create Direct3D8\n"));
-			D3DInterface = Direct3DCreate8Ptr(D3D_SDK_VERSION);		// TODO: handle failure cases...
+			WWDEBUG_SAY(("Create Direct3D9\n"));
+			D3DInterface = Direct3DCreate9Ptr(D3D_SDK_VERSION);		// TODO: handle failure cases...
 			if (D3DInterface == NULL) {
 				return(false);
 			}
@@ -316,9 +317,9 @@ void DX8Wrapper::Shutdown(void)
 	_RenderDeviceShortNameTable.Delete_All();
 	_RenderDeviceDescriptionTable.Delete_All();
 
-	if (D3D8Lib) {
-		FreeLibrary(D3D8Lib);
-		D3D8Lib = NULL;
+	if (D3D9Lib) {
+		FreeLibrary(D3D9Lib);
+		D3D9Lib = NULL;
 	}
 
 	IsInitted = false;
@@ -587,40 +588,46 @@ void DX8Wrapper::Enumerate_Devices()
 
 			/*
 			** Enumerate the resolutions
+			** D3D9 requires a format parameter for GetAdapterModeCount and EnumAdapterModes
+			** We enumerate multiple common formats to get all supported modes
 			*/
 			desc.reset_resolution_list();
-			int mode_count = D3DInterface->GetAdapterModeCount(adapter_index);
-			for (int mode_index=0; mode_index<mode_count; mode_index++) {
-				D3DDISPLAYMODE d3dmode;
-				::ZeroMemory(&d3dmode, sizeof(D3DDISPLAYMODE));
-				HRESULT res = D3DInterface->EnumAdapterModes(adapter_index,mode_index,&d3dmode);
+			D3DFORMAT formats[] = { D3DFMT_X8R8G8B8, D3DFMT_A8R8G8B8, D3DFMT_R5G6B5, D3DFMT_X1R5G5B5 };
+			for (int fmt_idx = 0; fmt_idx < 4; fmt_idx++) {
+				D3DFORMAT format = formats[fmt_idx];
+				int mode_count = D3DInterface->GetAdapterModeCount(adapter_index, format);
+				for (int mode_index=0; mode_index<mode_count; mode_index++) {
+					D3DDISPLAYMODE d3dmode;
+					::ZeroMemory(&d3dmode, sizeof(D3DDISPLAYMODE));
+					HRESULT res = D3DInterface->EnumAdapterModes(adapter_index, format, mode_index, &d3dmode);
 
-				if (res == D3D_OK) {
-					int bits = 0;
-					switch (d3dmode.Format)
-					{
-						case D3DFMT_R8G8B8:
-						case D3DFMT_A8R8G8B8:
-						case D3DFMT_X8R8G8B8:		bits = 32; break;
+					if (res == D3D_OK) {
+						int bits = 0;
+						switch (d3dmode.Format)
+						{
+							case D3DFMT_R8G8B8:
+							case D3DFMT_A8R8G8B8:
+							case D3DFMT_X8R8G8B8:		bits = 32; break;
 
-						case D3DFMT_R5G6B5:
-						case D3DFMT_X1R5G5B5:		bits = 16; break;
-					}
+							case D3DFMT_R5G6B5:
+							case D3DFMT_X1R5G5B5:		bits = 16; break;
+						}
 
-					// Some cards fail in certain modes, DX8Caps keeps list of those.
-					if (!dx8caps.Is_Valid_Display_Format(d3dmode.Width,d3dmode.Height,D3DFormat_To_WW3DFormat(d3dmode.Format))) {
-						bits=0;
-					}
+						// Some cards fail in certain modes, DX8Caps keeps list of those.
+						if (!dx8caps.Is_Valid_Display_Format(d3dmode.Width,d3dmode.Height,D3DFormat_To_WW3DFormat(d3dmode.Format))) {
+							bits=0;
+						}
 
-					/*
-					** If we recognize the format, add it to the list
-					** TODO: should we handle more formats?  will any cards report more than 24 or 16 bit?
-					*/
-					if (bits != 0) {
-						desc.add_resolution(d3dmode.Width,d3dmode.Height,bits);
+						/*
+						** If we recognize the format, add it to the list
+						** TODO: should we handle more formats?  will any cards report more than 24 or 16 bit?
+						*/
+						if (bits != 0) {
+							desc.add_resolution(d3dmode.Width,d3dmode.Height,bits);
+						}
 					}
 				}
-			}
+			}  // End format loop
 
 			// IML: If the device has one or more valid resolutions add it to the device list.
 			// NOTE: Testing has shown that there are drivers with zero resolutions.
@@ -733,7 +740,7 @@ bool DX8Wrapper::Set_Render_Device(int dev, int width, int height, int bits, int
 	_PresentParameters.EnableAutoDepthStencil = TRUE;				// Driver will attempt to match Z-buffer depth
 	_PresentParameters.Flags=0;											// We're not going to lock the backbuffer
 
-	_PresentParameters.FullScreen_PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+	_PresentParameters.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
 	_PresentParameters.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
 
 	/*
@@ -950,11 +957,11 @@ bool DX8Wrapper::Toggle_Windowed(void)
 void DX8Wrapper::Set_Swap_Interval(int swap)
 {
 	switch (swap) {
-		case 0: _PresentParameters.FullScreen_PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE; break;
-		case 1: _PresentParameters.FullScreen_PresentationInterval = D3DPRESENT_INTERVAL_ONE ; break;
-		case 2: _PresentParameters.FullScreen_PresentationInterval = D3DPRESENT_INTERVAL_TWO; break;
-		case 3: _PresentParameters.FullScreen_PresentationInterval = D3DPRESENT_INTERVAL_THREE; break;
-		default: _PresentParameters.FullScreen_PresentationInterval = D3DPRESENT_INTERVAL_ONE ; break;
+		case 0: _PresentParameters.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE; break;
+		case 1: _PresentParameters.PresentationInterval = D3DPRESENT_INTERVAL_ONE ; break;
+		case 2: _PresentParameters.PresentationInterval = D3DPRESENT_INTERVAL_TWO; break;
+		case 3: _PresentParameters.PresentationInterval = D3DPRESENT_INTERVAL_THREE; break;
+		default: _PresentParameters.PresentationInterval = D3DPRESENT_INTERVAL_ONE ; break;
 	}
 
 	Reset_Device();
@@ -962,7 +969,7 @@ void DX8Wrapper::Set_Swap_Interval(int swap)
 
 int DX8Wrapper::Get_Swap_Interval(void)
 {
-	return _PresentParameters.FullScreen_PresentationInterval;
+	return _PresentParameters.PresentationInterval;
 }
 
 int DX8Wrapper::Get_Render_Device_Count(void)
@@ -1268,13 +1275,14 @@ bool DX8Wrapper::Find_Color_Mode(D3DFORMAT colorbuffer, int resx, int resy, UINT
 
 	bool found=false;
 
-	modemax=D3DInterface->GetAdapterModeCount(D3DADAPTER_DEFAULT);
+	// D3D9: GetAdapterModeCount and EnumAdapterModes require format parameter
+	modemax=D3DInterface->GetAdapterModeCount(D3DADAPTER_DEFAULT, colorbuffer);
 
 	i=0;
 
 	while (i<modemax && !found)
 	{
-		D3DInterface->EnumAdapterModes(D3DADAPTER_DEFAULT, i, &dmode);
+		D3DInterface->EnumAdapterModes(D3DADAPTER_DEFAULT, colorbuffer, i, &dmode);
 		if (dmode.Width==rx && dmode.Height==ry && dmode.Format==colorbuffer) {
 			WWDEBUG_SAY(("Found valid color mode.  Width = %d Height = %d Format = %d\r\n",dmode.Width,dmode.Height,dmode.Format));
 			found=true;
@@ -1296,7 +1304,7 @@ bool DX8Wrapper::Find_Color_Mode(D3DFORMAT colorbuffer, int resx, int resy, UINT
 	j=i;
 	while (j<modemax && stillok)
 	{
-		D3DInterface->EnumAdapterModes(D3DADAPTER_DEFAULT, j, &dmode);
+		D3DInterface->EnumAdapterModes(D3DADAPTER_DEFAULT, colorbuffer, j, &dmode);
 		if (dmode.Width==rx && dmode.Height==ry && dmode.Format==colorbuffer)
 			stillok=true; else stillok=false;
 		j++;
@@ -1462,7 +1470,8 @@ void DX8Wrapper::End_Scene(bool flip_frames)
 		// Remember that for this to work the back buffers need to have been create as lockable!
 		if (Get_Current_Caps()->Get_Vendor()==DX8Caps::VENDOR_ATI) {
 			IDirect3DSurface8 * bb;
-			DX8CALL(GetBackBuffer(0,D3DBACKBUFFER_TYPE_MONO,&bb));
+			// D3D9: GetBackBuffer takes swap chain index as first arg
+			DX8CALL(GetBackBuffer(0,0,D3DBACKBUFFER_TYPE_MONO,&bb));
 			D3DLOCKED_RECT rect;
 			HRESULT res=bb->LockRect(
 					&rect,
@@ -1582,6 +1591,69 @@ void DX8Wrapper::Clear(bool clear_color, bool clear_z_stencil, const Vector3 &co
 	{
 		DX8CALL(Clear(0, NULL, flags, Convert_Color(color,0.0f), z, stencil));
 	}
+}
+
+// ----------------------------------------------------------------------------
+//
+// Save a screenshot of the backbuffer to a BMP file in the specified folder.
+// Creates the folder if it doesn't exist. Filename includes timestamp.
+//
+// ----------------------------------------------------------------------------
+
+bool DX8Wrapper::Save_Screenshot(const char* folder_path)
+{
+	DX8_THREAD_ASSERT();
+
+	if (!D3DDevice || !folder_path) {
+		return false;
+	}
+
+	// Create the folder if it doesn't exist
+	CreateDirectoryA(folder_path, NULL);
+
+	// Generate filename with timestamp
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+	char filename[MAX_PATH];
+	sprintf(filename, "%s\\screenshot_%04d%02d%02d_%02d%02d%02d_%03d.bmp",
+		folder_path, st.wYear, st.wMonth, st.wDay,
+		st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+
+	// Get the backbuffer
+	IDirect3DSurface9* backbuffer = NULL;
+	HRESULT hr = D3DDevice->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &backbuffer);
+	if (FAILED(hr) || !backbuffer) {
+		return false;
+	}
+
+	// Get backbuffer description
+	D3DSURFACE_DESC desc;
+	backbuffer->GetDesc(&desc);
+
+	// Create an offscreen surface in system memory for the copy
+	IDirect3DSurface9* offscreen = NULL;
+	hr = D3DDevice->CreateOffscreenPlainSurface(desc.Width, desc.Height, D3DFMT_X8R8G8B8, D3DPOOL_SYSTEMMEM, &offscreen, NULL);
+	if (FAILED(hr) || !offscreen) {
+		backbuffer->Release();
+		return false;
+	}
+
+	// Copy backbuffer to offscreen surface using GetRenderTargetData
+	hr = D3DDevice->GetRenderTargetData(backbuffer, offscreen);
+	if (FAILED(hr)) {
+		offscreen->Release();
+		backbuffer->Release();
+		return false;
+	}
+
+	// Save to file
+	hr = D3DXSaveSurfaceToFileA(filename, D3DXIFF_BMP, offscreen, NULL, NULL);
+
+	// Cleanup
+	offscreen->Release();
+	backbuffer->Release();
+
+	return SUCCEEDED(hr);
 }
 
 void DX8Wrapper::Set_Viewport(CONST D3DVIEWPORT8* pViewport)
@@ -1714,11 +1786,14 @@ void DX8Wrapper::Draw_Sorting_IB_VB(
 		}
 	}
 
+	// D3D9: SetStreamSource takes 4 args (stream, buffer, offset, stride)
 	DX8CALL(SetStreamSource(
 		0,
 		static_cast<DX8VertexBufferClass*>(dyn_vb_access.VertexBuffer)->Get_DX8_Vertex_Buffer(),
+		0,  // offset (D3D9 addition)
 		dyn_vb_access.FVF_Info().Get_FVF_Size()));
-	DX8CALL(SetVertexShader(dyn_vb_access.FVF_Info().Get_FVF()));
+	// D3D9: Use SetFVF instead of SetVertexShader for FVF values
+	DX8CALL(SetFVF(dyn_vb_access.FVF_Info().Get_FVF()));
 	DX8_RECORD_VERTEX_BUFFER_CHANGE();
 
 	unsigned index_count=0;
@@ -1746,14 +1821,18 @@ void DX8Wrapper::Draw_Sorting_IB_VB(
 		}
 	}
 
+	// D3D9: SetIndices takes only 1 arg (buffer), base vertex moved to DrawIndexedPrimitive
 	DX8CALL(SetIndices(
-		static_cast<DX8IndexBufferClass*>(dyn_ib_access.IndexBuffer)->Get_DX8_Index_Buffer(),
-		dyn_vb_access.VertexBufferOffset));
+		static_cast<DX8IndexBufferClass*>(dyn_ib_access.IndexBuffer)->Get_DX8_Index_Buffer()));
 	DX8_RECORD_INDEX_BUFFER_CHANGE();
 
+	// D3D9: DrawIndexedPrimitive takes BaseVertexIndex as 2nd param
+	// In D3D8 it was: (type, min_index, num_vertices, start_index, prim_count)
+	// In D3D9 it is:  (type, base_vertex, min_index, num_vertices, start_index, prim_count)
 	DX8CALL(DrawIndexedPrimitive(
 		D3DPT_TRIANGLELIST,
-		0,		// start vertex
+		dyn_vb_access.VertexBufferOffset,  // BaseVertexIndex (was passed to SetIndices in D3D8)
+		0,		// MinVertexIndex (was first param after type in D3D8)
 		vertex_count,
 		dyn_ib_access.IndexBufferOffset,
 		polygon_count));
@@ -1857,8 +1936,10 @@ void DX8Wrapper::Draw(
 		case BUFFER_TYPE_DYNAMIC_DX8:
 			{
 				DX8_RECORD_RENDER(polygon_count,vertex_count,render_state.shader);
+				// D3D9: DrawIndexedPrimitive takes BaseVertexIndex as 2nd param
 				DX8CALL(DrawIndexedPrimitive(
 					(D3DPRIMITIVETYPE)primitive_type,
+					render_state.index_base_offset+render_state.vba_offset,  // BaseVertexIndex (was in SetIndices)
 					min_vertex_index,
 					vertex_count,
 					start_index+render_state.iba_offset,
@@ -2012,12 +2093,15 @@ void DX8Wrapper::Apply_Render_State_Changes()
 			switch (render_state.vertex_buffer_type) {//->Type()) {
 			case BUFFER_TYPE_DX8:
 			case BUFFER_TYPE_DYNAMIC_DX8:
+				// D3D9: SetStreamSource takes 4 args (stream, buffer, offset, stride)
 				DX8CALL(SetStreamSource(
 					0,
 					static_cast<DX8VertexBufferClass*>(render_state.vertex_buffer)->Get_DX8_Vertex_Buffer(),
+					0,  // offset (D3D9 addition)
 					render_state.vertex_buffer->FVF_Info().Get_FVF_Size()));
 				DX8_RECORD_VERTEX_BUFFER_CHANGE();
-				DX8CALL(SetVertexShader(render_state.vertex_buffer->FVF_Info().Get_FVF()));
+				// D3D9: Use SetFVF instead of SetVertexShader for FVF values
+				DX8CALL(SetFVF(render_state.vertex_buffer->FVF_Info().Get_FVF()));
 				break;
 			case BUFFER_TYPE_SORTING:
 			case BUFFER_TYPE_DYNAMIC_SORTING:
@@ -2026,7 +2110,8 @@ void DX8Wrapper::Apply_Render_State_Changes()
 				WWASSERT(0);
 			}
 		} else {
-			DX8CALL(SetStreamSource(0,NULL,0));
+			// D3D9: SetStreamSource takes 4 args (stream, buffer, offset, stride)
+			DX8CALL(SetStreamSource(0,NULL,0,0));
 			DX8_RECORD_VERTEX_BUFFER_CHANGE();
 		}
 	}
@@ -2036,9 +2121,9 @@ void DX8Wrapper::Apply_Render_State_Changes()
 			switch (render_state.index_buffer_type) {//->Type()) {
 			case BUFFER_TYPE_DX8:
 			case BUFFER_TYPE_DYNAMIC_DX8:
+				// D3D9: SetIndices takes only buffer, base vertex moved to DrawIndexedPrimitive
 				DX8CALL(SetIndices(
-					static_cast<DX8IndexBufferClass*>(render_state.index_buffer)->Get_DX8_Index_Buffer(),
-					render_state.index_base_offset+render_state.vba_offset));
+					static_cast<DX8IndexBufferClass*>(render_state.index_buffer)->Get_DX8_Index_Buffer()));
 				DX8_RECORD_INDEX_BUFFER_CHANGE();
 				break;
 			case BUFFER_TYPE_SORTING:
@@ -2049,9 +2134,8 @@ void DX8Wrapper::Apply_Render_State_Changes()
 			}
 		}
 		else {
-			DX8CALL(SetIndices(
-				NULL,
-				0));
+			// D3D9: SetIndices takes only buffer
+			DX8CALL(SetIndices(NULL));
 			DX8_RECORD_INDEX_BUFFER_CHANGE();
 		}
 	}
@@ -2263,7 +2347,8 @@ IDirect3DSurface8 * DX8Wrapper::_Create_DX8_Surface(unsigned int width, unsigned
 	// Paletted surfaces not supported!
 	WWASSERT(format!=D3DFMT_P8);
 
-	DX8CALL(CreateImageSurface(width, height, WW3DFormat_To_D3DFormat(format), &surface));
+	// D3D9: CreateImageSurface was replaced with CreateOffscreenPlainSurface
+	DX8CALL(CreateOffscreenPlainSurface(width, height, WW3DFormat_To_D3DFormat(format), D3DPOOL_SYSTEMMEM, &surface, NULL));
 
 	return surface;
 }
@@ -2447,13 +2532,16 @@ IDirect3DSurface8 * DX8Wrapper::_Get_DX8_Front_Buffer()
 	DX8_THREAD_ASSERT();
 	D3DDISPLAYMODE mode;
 
-	DX8CALL(GetDisplayMode(&mode));
+	// D3D9: GetDisplayMode takes swap chain index (0) as first arg
+	DX8CALL(GetDisplayMode(0, &mode));
 
 	IDirect3DSurface8 * fb=NULL;
 
-	DX8CALL(CreateImageSurface(mode.Width,mode.Height,D3DFMT_A8R8G8B8,&fb));
+	// D3D9: CreateImageSurface was replaced with CreateOffscreenPlainSurface
+	DX8CALL(CreateOffscreenPlainSurface(mode.Width,mode.Height,D3DFMT_A8R8G8B8,D3DPOOL_SYSTEMMEM,&fb,NULL));
 
-	DX8CALL(GetFrontBuffer(fb));
+	// D3D9: GetFrontBuffer was replaced with GetFrontBufferData
+	DX8CALL(GetFrontBufferData(0, fb));  // swap chain index 0
 	return fb;
 }
 
@@ -2463,7 +2551,8 @@ SurfaceClass * DX8Wrapper::_Get_DX8_Back_Buffer(unsigned int num)
 
 	IDirect3DSurface8 * bb;
 	SurfaceClass *surf=NULL;
-	DX8CALL(GetBackBuffer(num,D3DBACKBUFFER_TYPE_MONO,&bb));
+	// D3D9: GetBackBuffer takes swap chain index (0) as first arg
+	DX8CALL(GetBackBuffer(0,num,D3DBACKBUFFER_TYPE_MONO,&bb));
 	if (bb)
 	{
 		surf=NEW_REF(SurfaceClass,(bb));
@@ -2472,6 +2561,39 @@ SurfaceClass * DX8Wrapper::_Get_DX8_Back_Buffer(unsigned int num)
 
 	return surf;
 }
+
+void DX8Wrapper::_Copy_DX8_Rects(
+	IDirect3DSurface8* pSourceSurface,
+	CONST RECT* pSourceRectsArray,
+	UINT cRects,
+	IDirect3DSurface8* pDestinationSurface,
+	CONST POINT* pDestPointsArray
+)
+{
+	// D3D8 CopyRects was replaced in D3D9. UpdateSurface only works SYSTEMMEM->DEFAULT,
+	// but D3DXLoadSurfaceFromSurface works between any pools (including MANAGED textures).
+	if (cRects == 0 || pSourceRectsArray == NULL) {
+		// Copy entire surface
+		DX8_ErrorCode(D3DXLoadSurfaceFromSurface(pDestinationSurface, NULL, NULL,
+			pSourceSurface, NULL, NULL, D3DX_FILTER_NONE, 0));
+	} else {
+		// Copy specified rects one at a time
+		for (UINT i = 0; i < cRects; i++) {
+			RECT destRect;
+			if (pDestPointsArray) {
+				destRect.left = pDestPointsArray[i].x;
+				destRect.top = pDestPointsArray[i].y;
+				destRect.right = pDestPointsArray[i].x + (pSourceRectsArray[i].right - pSourceRectsArray[i].left);
+				destRect.bottom = pDestPointsArray[i].y + (pSourceRectsArray[i].bottom - pSourceRectsArray[i].top);
+			} else {
+				destRect = pSourceRectsArray[i];
+			}
+			DX8_ErrorCode(D3DXLoadSurfaceFromSurface(pDestinationSurface, NULL, &destRect,
+				pSourceSurface, NULL, &pSourceRectsArray[i], D3DX_FILTER_NONE, 0));
+		}
+	}
+}
+
 
 
 TextureClass *
@@ -2484,7 +2606,8 @@ DX8Wrapper::Create_Render_Target (int width, int height, WW3DFormat format)
 	// Use the current display format if format isn't specified
 	if (format==WW3D_FORMAT_UNKNOWN) {
 		D3DDISPLAYMODE mode;
-		DX8CALL(GetDisplayMode(&mode));
+		// D3D9: GetDisplayMode takes swap chain index (0) as first arg
+		DX8CALL(GetDisplayMode(0, &mode));
 		format=D3DFormat_To_WW3DFormat(mode.Format);
 	}
 
@@ -2590,7 +2713,11 @@ DX8Wrapper::Set_Render_Target(IDirect3DSurface8 *render_target, bool use_default
 		//	Restore the default render target
 		//
 		if (DefaultRenderTarget != NULL) {
-			DX8CALL(SetRenderTarget (DefaultRenderTarget, DefaultDepthBuffer));
+			// D3D9: SetRenderTarget takes (index, surface), depth buffer set separately
+			DX8CALL(SetRenderTarget(0, DefaultRenderTarget));
+			if (DefaultDepthBuffer) {
+				DX8CALL(SetDepthStencilSurface(DefaultDepthBuffer));
+			}
 			DefaultRenderTarget->Release ();
 			DefaultRenderTarget = NULL;
 			if (DefaultDepthBuffer) {
@@ -2622,7 +2749,8 @@ DX8Wrapper::Set_Render_Target(IDirect3DSurface8 *render_target, bool use_default
 		//	Get a pointer to the default render target (if necessary)
 		//
 		if (DefaultRenderTarget == NULL) {
-			DX8CALL(GetRenderTarget (&DefaultRenderTarget));
+			// D3D9: GetRenderTarget takes (index, &surface)
+			DX8CALL(GetRenderTarget(0, &DefaultRenderTarget));
 		}
 
 		//
@@ -2644,10 +2772,12 @@ DX8Wrapper::Set_Render_Target(IDirect3DSurface8 *render_target, bool use_default
 			//
 			//	Switch render targets
 			//
+			// D3D9: SetRenderTarget takes (index, surface), depth buffer set separately
+			DX8CALL(SetRenderTarget(0, CurrentRenderTarget));
 			if (use_default_depth_buffer) {
-				DX8CALL(SetRenderTarget (CurrentRenderTarget, DefaultDepthBuffer));
+				DX8CALL(SetDepthStencilSurface(DefaultDepthBuffer));
 			} else {
-				DX8CALL(SetRenderTarget (CurrentRenderTarget, NULL));
+				DX8CALL(SetDepthStencilSurface(NULL));
 			}
 		}
 	}
@@ -2684,7 +2814,8 @@ DX8Wrapper::Create_Additional_Swap_Chain (HWND render_window)
 	params.AutoDepthStencilFormat				= _PresentParameters.AutoDepthStencilFormat;
 	params.Flags									= 0;
 	params.FullScreen_RefreshRateInHz		= D3DPRESENT_RATE_DEFAULT;
-	params.FullScreen_PresentationInterval	= D3DPRESENT_INTERVAL_DEFAULT;
+	// D3D9: FullScreen_PresentationInterval was renamed to PresentationInterval
+	params.PresentationInterval				= D3DPRESENT_INTERVAL_DEFAULT;
 
 	//
 	//	Create the swap chain
@@ -2697,7 +2828,10 @@ DX8Wrapper::Create_Additional_Swap_Chain (HWND render_window)
 void DX8Wrapper::Flush_DX8_Resource_Manager(unsigned int bytes)
 {
 	DX8_Assert();
-	DX8CALL(ResourceManagerDiscardBytes(bytes));
+	// D3D9: ResourceManagerDiscardBytes was replaced with EvictManagedResources
+	// EvictManagedResources doesn't take a bytes parameter - it evicts all managed resources
+	(void)bytes;  // Unused in D3D9
+	DX8CALL(EvictManagedResources());
 }
 
 unsigned int DX8Wrapper::Get_Free_Texture_RAM()
@@ -2748,7 +2882,8 @@ void DX8Wrapper::Set_Gamma(float gamma,float bright,float contrast,bool calibrat
 	}
 
 	if (Get_Current_Caps()->Support_Gamma())	{
-		DX8Wrapper::_Get_D3D_Device8()->SetGammaRamp(flag,&ramp);
+		// D3D9: SetGammaRamp takes swap chain index (0) as first arg
+		DX8Wrapper::_Get_D3D_Device8()->SetGammaRamp(0, flag, &ramp);
 	} else {
 		HWND hwnd = GetDesktopWindow();
 		HDC hdc = GetDC(hwnd);
@@ -2780,14 +2915,14 @@ const char* DX8Wrapper::Get_DX8_Render_State_Name(D3DRENDERSTATETYPE state)
 	case D3DRS_ALPHABLENDENABLE              : return "D3DRS_ALPHABLENDENABLE";
 	case D3DRS_FOGENABLE                     : return "D3DRS_FOGENABLE";
 	case D3DRS_SPECULARENABLE                : return "D3DRS_SPECULARENABLE";
-	case D3DRS_ZVISIBLE                      : return "D3DRS_ZVISIBLE";
+	// D3DRS_ZVISIBLE removed in D3D9 (value 30 conflicts)
 	case D3DRS_FOGCOLOR                      : return "D3DRS_FOGCOLOR";
 	case D3DRS_FOGTABLEMODE                  : return "D3DRS_FOGTABLEMODE";
 	case D3DRS_FOGSTART                      : return "D3DRS_FOGSTART";
 	case D3DRS_FOGEND                        : return "D3DRS_FOGEND";
 	case D3DRS_FOGDENSITY                    : return "D3DRS_FOGDENSITY";
-	case D3DRS_EDGEANTIALIAS                 : return "D3DRS_EDGEANTIALIAS";
-	case D3DRS_ZBIAS                         : return "D3DRS_ZBIAS";
+	// D3DRS_EDGEANTIALIAS removed in D3D9 (value 40 conflicts)
+	// D3DRS_ZBIAS removed in D3D9 (value 7 = D3DRS_ZENABLE)
 	case D3DRS_RANGEFOGENABLE                : return "D3DRS_RANGEFOGENABLE";
 	case D3DRS_STENCILENABLE                 : return "D3DRS_STENCILENABLE";
 	case D3DRS_STENCILFAIL                   : return "D3DRS_STENCILFAIL";
@@ -2965,7 +3100,7 @@ void DX8Wrapper::Get_DX8_Render_State_Value_Name(StringClass& name, D3DRENDERSTA
 		name.Format("%f",*(float*)&value);
 		break;
 
-	case D3DRS_ZBIAS:
+	// D3DRS_ZBIAS removed in D3D9 (value 7 = D3DRS_ZENABLE)
 	case D3DRS_STENCILREF:
 		name.Format("%d",value);
 		break;
@@ -3156,8 +3291,7 @@ const char* DX8Wrapper::Get_DX8_Texture_Filter_Name(unsigned value)
 	case D3DTEXF_POINT			: return "D3DTEXF_POINT";
 	case D3DTEXF_LINEAR			: return "D3DTEXF_LINEAR";
 	case D3DTEXF_ANISOTROPIC	: return "D3DTEXF_ANISOTROPIC";
-	case D3DTEXF_FLATCUBIC		: return "D3DTEXF_FLATCUBIC";
-	case D3DTEXF_GAUSSIANCUBIC	: return "D3DTEXF_GAUSSIANCUBIC";
+	// D3DTEXF_FLATCUBIC and D3DTEXF_GAUSSIANCUBIC removed in D3D9 (map to D3DTEXF_LINEAR)
 	default					      : return "UNKNOWN";
 	}
 }

@@ -140,8 +140,8 @@ WWAudioClass::WWAudioClass (bool lite)
 	  m_PlaybackBits (16),
 	  m_PlaybackStereo (true),
 	  m_SpeakerType (0),
-	  m_ReverbFilter (INVALID_MILES_HANDLE),
-	  m_UpdateTimer (-1),
+	  m_ReverbFilter (INVALID_HPROVIDER),
+	  m_UpdateTimer (INVALID_HTIMER),
 	  m_Driver3DPseudo (NULL),
 	  m_MusicVolume (DEF_MUSIC_VOL),
 	  m_SoundVolume (DEF_SFX_VOL),
@@ -2427,7 +2427,7 @@ WWAudioClass::Initialize (const char *registry_subkey_name)
 		HPROENUM next = HPROENUM_FIRST;
 		char *name = NULL;
 		if (::AIL_enumerate_filters (&next, &m_ReverbFilter, &name) == 0) {
-			m_ReverbFilter = INVALID_MILES_HANDLE;
+			m_ReverbFilter = INVALID_HPROVIDER;
 		}
 
 		m_RealMusicVolume = m_MusicVolume;
@@ -2469,7 +2469,7 @@ WWAudioClass::Initialize
 		HPROENUM next = HPROENUM_FIRST;
 		char *name = NULL;
 		if (::AIL_enumerate_filters (&next, &m_ReverbFilter, &name) == 0) {
-			m_ReverbFilter = INVALID_MILES_HANDLE;
+			m_ReverbFilter = INVALID_HPROVIDER;
 		}
 	}
 
@@ -2494,12 +2494,12 @@ WWAudioClass::Shutdown (void)
 	//
 	// If there is a timer running, then stop the timer...
 	//
-	if (m_UpdateTimer != -1) {
+	if (m_UpdateTimer != INVALID_HTIMER) {
 
 		// Kill the timer
 		::AIL_stop_timer (m_UpdateTimer);
 		::AIL_release_timer_handle (m_UpdateTimer);
-		m_UpdateTimer = -1;
+		m_UpdateTimer = INVALID_HTIMER;
 
 		// Wait for the timer callback function to end
 		::WaitForSingleObject (_TimerSyncEvent, 20000);

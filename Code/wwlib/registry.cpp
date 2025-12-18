@@ -48,7 +48,8 @@ bool RegistryClass::IsLocked = false;
 bool RegistryClass::Exists(const char* sub_key)
 {
 	HKEY hKey;
-	LONG result = RegOpenKeyEx(HKEY_LOCAL_MACHINE, sub_key, 0, KEY_READ, &hKey);
+	// Use HKEY_CURRENT_USER for UAC compatibility on modern Windows
+	LONG result = RegOpenKeyEx(HKEY_CURRENT_USER, sub_key, 0, KEY_READ, &hKey);
 
 	if (ERROR_SUCCESS == result) {
 		RegCloseKey(hKey);
@@ -69,12 +70,13 @@ RegistryClass::RegistryClass( const char * sub_key, bool create ) :
 
 	LONG result = -1;
 
+	// Use HKEY_CURRENT_USER for UAC compatibility on modern Windows
 	if (create && !IsLocked) {
 		DWORD disposition;
-		result = RegCreateKeyEx(HKEY_LOCAL_MACHINE, sub_key, 0, NULL, 0,
+		result = RegCreateKeyEx(HKEY_CURRENT_USER, sub_key, 0, NULL, 0,
 			KEY_ALL_ACCESS, NULL, &key, &disposition);
 	} else {
-		result = RegOpenKeyEx(HKEY_LOCAL_MACHINE, sub_key, 0, IsLocked ? KEY_READ : KEY_ALL_ACCESS, &key);
+		result = RegOpenKeyEx(HKEY_CURRENT_USER, sub_key, 0, IsLocked ? KEY_READ : KEY_ALL_ACCESS, &key);
 	}
 
 	if (ERROR_SUCCESS == result) {
@@ -451,8 +453,8 @@ void RegistryClass::Save_Registry_Tree(char *path, INIClass *ini)
 	FILETIME file_time;
 	memset(&file_time, 0, sizeof(file_time));
 
-
-	long result = RegOpenKeyEx(HKEY_LOCAL_MACHINE, path, 0, KEY_ALL_ACCESS, &base_key);
+	// Use HKEY_CURRENT_USER for UAC compatibility on modern Windows
+	long result = RegOpenKeyEx(HKEY_CURRENT_USER, path, 0, KEY_ALL_ACCESS, &base_key);
 
 	WWASSERT(result == ERROR_SUCCESS);
 
@@ -477,7 +479,7 @@ void RegistryClass::Save_Registry_Tree(char *path, INIClass *ini)
 				unsigned long num_subs = 0;
 				unsigned long num_values = 0;
 
-				long new_result = RegOpenKeyEx(HKEY_LOCAL_MACHINE, new_key_path, 0, KEY_ALL_ACCESS, &sub_key);
+				long new_result = RegOpenKeyEx(HKEY_CURRENT_USER, new_key_path, 0, KEY_ALL_ACCESS, &sub_key);
 				if (new_result == ERROR_SUCCESS) {
 					new_result = RegQueryInfoKey(sub_key, NULL, NULL, 0, &num_subs, NULL, NULL, &num_values, NULL, NULL, NULL, NULL);
 
@@ -676,8 +678,8 @@ void RegistryClass::Delete_Registry_Tree(char *path)
 		memset(&file_time, 0, sizeof(file_time));
 		int max_times = 1000;
 
-
-		long result = RegOpenKeyEx(HKEY_LOCAL_MACHINE, path, 0, KEY_ALL_ACCESS, &base_key);
+		// Use HKEY_CURRENT_USER for UAC compatibility on modern Windows
+		long result = RegOpenKeyEx(HKEY_CURRENT_USER, path, 0, KEY_ALL_ACCESS, &base_key);
 
 		if (result == ERROR_SUCCESS) {
 			Delete_Registry_Values(base_key);
@@ -700,7 +702,7 @@ void RegistryClass::Delete_Registry_Tree(char *path)
 					unsigned long num_subs = 0;
 					unsigned long num_values = 0;
 
-					long new_result = RegOpenKeyEx(HKEY_LOCAL_MACHINE, new_key_path, 0, KEY_ALL_ACCESS, &sub_key);
+					long new_result = RegOpenKeyEx(HKEY_CURRENT_USER, new_key_path, 0, KEY_ALL_ACCESS, &sub_key);
 					if (new_result == ERROR_SUCCESS) {
 						new_result = RegQueryInfoKey(sub_key, NULL, NULL, 0, &num_subs, NULL, NULL, &num_values, NULL, NULL, NULL, NULL);
 
@@ -727,7 +729,7 @@ void RegistryClass::Delete_Registry_Tree(char *path)
 			}
 			RegCloseKey(base_key);
 
-			RegDeleteKey(HKEY_LOCAL_MACHINE, path);
+			RegDeleteKey(HKEY_CURRENT_USER, path);
 		}
 	}
 }

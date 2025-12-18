@@ -1,4 +1,3 @@
-
 # Ignore RUNable folder
 [Rr]un
 
@@ -21,6 +20,71 @@ Max4_Release/
 Max4_Hybrid/
 GMax_Release/
 GMax_Hybrid/
+
+# CMake build directories
+build/
+build-*/
+build32/
+build-x86/
+out/
+cmake-build-*/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Testing/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+*.cmake
+!cmake/*.cmake
+
+# Visual Studio files and folders
+.vs/
+.vscode/
+*.vcxproj.user
+*.vcxproj.filters
+*.sln.docstates
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.user
+*.userosscache
+*.sdf
+*.opensdf
+*.db-shm
+*.db-wal
+
+# Visual Studio build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache/options files
+*.vspscc
+*.vssscc
+.vs/
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
 
 # Various Visual Studio extensions
 *.opt
@@ -53,3 +117,84 @@ GMax_Hybrid/
 wwconfig_ids.rpt
 wwconfig_ids.h
 IDL_*.loc
+
+# Compiled Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+*.dll
+*.so
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Core dumps
+core
+core.*
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+*.bak
+*.cache
+
+# IDE - CLion
+.idea/
+cmake-build-*/
+
+# IDE - Qt Creator
+*.pro.user
+*.pro.user.*
+
+# IDE - Code::Blocks
+*.depend
+*.layout
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+*~
+.directory
+.Trash-*
+.mcp.json
+
+DirectX-SDK-June2010-master/

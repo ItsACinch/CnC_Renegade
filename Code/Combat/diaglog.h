@@ -54,6 +54,7 @@ public:
 	static	void	Shutdown( void );
 
 	static	void	Log_Timed( const char * type, const char * format, ... );
+	static	void	Log_Early( const char * msg );  // Simple early logging before engine init
 };
 
 #endif	// DIAGLOG_H

@@ -38,6 +38,7 @@
 #include "transition.h"
 #include "obbox.h"
 #include "aabox.h"
+#include "colmathaabox.h"
 #include "combat.h"
 #include "pscene.h"
 #include "staticanimphys.h"

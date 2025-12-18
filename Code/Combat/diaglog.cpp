@@ -40,6 +40,33 @@
 #include "timemgr.h"
 
 #include <WTYPES.H>	// for SYSTEMTIME
+#include <stdio.h>
+#include <windows.h>
+
+/*
+** Simple early diagnostic log that works before engine initialization.
+** Writes to %TEMP%\renegade_diag.txt and OutputDebugString.
+*/
+void DiagLogClass::Log_Early(const char* msg)
+{
+	// Output to debugger
+	OutputDebugStringA(msg);
+	OutputDebugStringA("\n");
+
+	// Write to TEMP folder (always writable without admin)
+	char path[MAX_PATH];
+	if (GetTempPathA(MAX_PATH, path)) {
+		strcat(path, "renegade_diag.txt");
+	} else {
+		strcpy(path, "renegade_diag.txt");
+	}
+	FILE* f = fopen(path, "a");
+	if (f) {
+		fprintf(f, "%s\n", msg);
+		fflush(f);
+		fclose(f);
+	}
+}
 
 FileClass * _DiagLogFile = NULL;
 

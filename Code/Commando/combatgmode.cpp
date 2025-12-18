@@ -613,6 +613,7 @@ public:
 */
 void CombatGameModeClass::Load_Level( void )
 {
+	DiagLogClass::Log_Early("=== Load_Level START ===");
 	WWLOG_PREPARE_TIME_AND_MEMORY("CombatGameModeClass::Load_Level");
 	WWMEMLOG(MEM_GAMEDATA);
 	Debug_Say(("CombatGameModeClass::Load_Level\n"));
@@ -621,8 +622,11 @@ void CombatGameModeClass::Load_Level( void )
 
 	CombatManager::Set_Load_Progress(0);
 	LoadingScreenClass loading_screen;	// Try moving this to very start of loading
+	DiagLogClass::Log_Early("Creating LoadingScreenClass...");
 	loading_screen.Render(true);
+	DiagLogClass::Log_Early("LoadingScreenClass created, about to render...");
 
+	DiagLogClass::Log_Early("First render complete");
 	// Hack load reg for default first person.  Is dont again later.
 	Load_Registry_Keys();
 	WWLOG_INTERMEDIATE("Load_REgistry_Keys");
@@ -646,6 +650,7 @@ void CombatGameModeClass::Load_Level( void )
 
 	//
 	// Stop the network layer from processing packets. This is needed in case a packet import or export accesses the datasafe
+	DiagLogClass::Log_Early("About to Pre_Load_Level...");
 	// from the main thread while the loader thread is loading stuff into the datasafe. This won't shut off packet acks so no-one
 	// will be disconnected as a result of this.
 	//
@@ -657,10 +662,13 @@ void CombatGameModeClass::Load_Level( void )
 		cNetwork::PClientConnection->Allow_Extra_Timeout_For_Loading();
 	}
 
+	DiagLogClass::Log_Early("Calling Pre_Load_Level...");
 	CombatManager::Pre_Load_Level(ConsoleBox.Is_Exclusive() ? false : true);
 
+	DiagLogClass::Log_Early("Pre_Load_Level done");
 	INIT_STATUS("Apply system settings");
 	SystemSettings::Apply_All();
+	DiagLogClass::Log_Early("SystemSettings::Apply_All done");
 
 	CombatManager::Set_Combat_Misc_Handler( &GameMiscHandler );
 
@@ -669,6 +677,7 @@ void CombatGameModeClass::Load_Level( void )
 //	LevelManager::Release_Level();
 
 	WWASSERT(PTheGameData != NULL);
+	DiagLogClass::Log_Early("Getting map name for loading...");
 	StringClass map_name(The_Game()->Get_Map_Name(),true);
 	WWASSERT( !map_name.Is_Empty() );
 
@@ -682,10 +691,12 @@ void CombatGameModeClass::Load_Level( void )
 	NetworkObjectMgrClass::Set_Is_Level_Loading (true);
 
 	TextureLoader::Suspend_Texture_Load();
+	DiagLogClass::Log_Early("TextureLoader suspended, calling Load_Level_Threaded...");
 
 	CombatManager::Load_Level_Threaded( map_name, preload_assets );
 
 	WWLOG_INTERMEDIATE("Level load preprocessing");
+	DiagLogClass::Log_Early("About to start threaded load...");
 
 	while (!CombatManager::Is_Load_Level_Complete() ) {
 		loading_screen.Render(true);

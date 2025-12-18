@@ -35,6 +35,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 // Includes.
+#include "diaglog.h"
 #include "backgroundmgr.h"
 #include "apppackettypes.h"
 #include "assetmgr.h"
@@ -167,6 +168,7 @@ HazeClass::HazeClass (float radius)
 
 	DiffuseArray = new unsigned [VertexCount];
 	WWASSERT (DiffuseArray != NULL);
+	DiagLogClass::Log_Early("StarfieldClass: DiffuseArray allocated, calling Configure");
 
 	Configure (white, white, 1.0f);
 }
@@ -365,6 +367,7 @@ void HazeClass::Render()
  *=============================================================================================*/
 StarfieldClass::StarfieldClass (float extent, unsigned starcount)
 {
+	DiagLogClass::Log_Early("StarfieldClass: entered");
 	const Vector3 white (1.0f, 1.0f, 1.0f);
 
 	VertexCount	  = VERTICES_PER_TRIANGLE * starcount;
@@ -372,9 +375,11 @@ StarfieldClass::StarfieldClass (float extent, unsigned starcount)
 
 	VertexArray = new Vector3 [VertexCount];
 	WWASSERT (VertexArray != NULL);
+	DiagLogClass::Log_Early("StarfieldClass: VertexArray allocated");
 
 	// Define triangles.
 	IndexBuffer = NEW_REF (DX8IndexBufferClass, (VertexCount));
+	DiagLogClass::Log_Early("StarfieldClass: about to create IndexBuffer");
 	{
 		DX8IndexBufferClass::WriteLockClass lock (IndexBuffer);
 		unsigned short *indices = lock.Get_Index_Array();
@@ -384,6 +389,7 @@ StarfieldClass::StarfieldClass (float extent, unsigned starcount)
 		}
 	}
 
+	DiagLogClass::Log_Early("StarfieldClass: IndexBuffer filled");
 	Material = VertexMaterialClass::Get_Preset (VertexMaterialClass::PRELIT_NODIFFUSE);
 
 	Shader = ShaderClass::_PresetAlpha2DShader;
@@ -391,17 +397,21 @@ StarfieldClass::StarfieldClass (float extent, unsigned starcount)
 	Shader.Set_Cull_Mode (ShaderClass::CULL_MODE_DISABLE);
 
 	Texture = WW3DAssetManager::Get_Instance()->Get_Texture ("Star.tga");
+	DiagLogClass::Log_Early("StarfieldClass: about to load Star.tga texture");
 	Texture->Set_U_Addr_Mode (TextureClass::TEXTURE_ADDRESS_CLAMP);
 	Texture->Set_V_Addr_Mode (TextureClass::TEXTURE_ADDRESS_CLAMP);
 
+	DiagLogClass::Log_Early("StarfieldClass: texture loaded");
 	#ifdef WW3D_DX8
 	Set_Texture_Hint (Texture, srTextureIFace::HINT_ALPHA_ONLY);
 	#endif
 
 	DiffuseArray = new unsigned [VertexCount];
 	WWASSERT (DiffuseArray != NULL);
+	DiagLogClass::Log_Early("StarfieldClass: DiffuseArray allocated, calling Configure");
 
 	Configure (Vector3 (1.0f, 0.0f, 0.0f), 1.0f, 1.0f, white, white, 0.0f);
+	DiagLogClass::Log_Early("StarfieldClass: Configure done");
 }
 
 
@@ -508,6 +518,7 @@ void StarfieldClass::Configure (const Vector3 &color0, const Vector3 &color1, fl
  *=============================================================================================*/
 void StarfieldClass::Configure()
 {
+	DiagLogClass::Log_Early("StarfieldClass::Configure() entered");
 	const unsigned positionrandomness		= 8192;
 	const float		oopositionrandomnesstwo = 2.0f / positionrandomness;
 	const unsigned radiusrandomness			= 16;
@@ -526,6 +537,7 @@ void StarfieldClass::Configure()
 	colordifference = Color1 - Color0;
 	m0.Look_At (Vector3 (0.0f, 0.0f, 0.0f), Orientation, 0.0f);
 	maxdp = Length / sqrtf ((Length * Length) + (Radius * Radius));
+	DiagLogClass::Log_Early("StarfieldClass::Configure() Look_At done");
 
 	ActiveVertexCount	  = 0;
 	ActiveTriangleCount = 0;
@@ -578,7 +590,9 @@ void StarfieldClass::Configure()
 	}
 
 	// Optimization: If alpha is zero then stars are invisible.
+	DiagLogClass::Log_Early("StarfieldClass::Configure() loop done, calling Set_Visibility");
 	Set_Visibility (Alpha > 0.0f);
+	DiagLogClass::Log_Early("StarfieldClass::Configure() Set_Visibility done");
 }
 
 
@@ -720,6 +734,7 @@ SkyObjectClass::SkyObjectClass (ShaderClass shader)
 
 	DiffuseArray = new unsigned [VertexCount];
 	WWASSERT (DiffuseArray != NULL);
+	DiagLogClass::Log_Early("StarfieldClass: DiffuseArray allocated, calling Configure");
 
 	Configure (Vector3 (1.0f, 0.0f, 0.0f), 1.0f, 1.0f, white);
 }
@@ -1095,6 +1110,7 @@ CloudLayerClass::CloudLayerClass (float maxdistance, const char *texturename, co
 
 	DiffuseArray = new unsigned [VertexCount];
 	WWASSERT (DiffuseArray != NULL);
+	DiagLogClass::Log_Early("StarfieldClass: DiffuseArray allocated, calling Configure");
 
 	WarmColor		  = white;
 	ColdColor		  = white;
@@ -1252,7 +1268,9 @@ void CloudLayerClass::Configure()
 	}
 
 	// Optimization: If alpha is zero then cloud layer is invisible.
+	DiagLogClass::Log_Early("StarfieldClass::Configure() loop done, calling Set_Visibility");
 	Set_Visibility (Alpha > 0.0f);
+	DiagLogClass::Log_Early("StarfieldClass::Configure() Set_Visibility done");
 }
 
 
@@ -1418,6 +1436,7 @@ SkyGlowClass::SkyGlowClass (float radius)
 
 	DiffuseArray = new unsigned [VertexCount];
 	WWASSERT (DiffuseArray != NULL);
+	DiagLogClass::Log_Early("StarfieldClass: DiffuseArray allocated, calling Configure");
 
 	Configure (Vector2 (1.0f, 0.0f), white, 1.0f);
 }
@@ -2195,40 +2214,51 @@ SkyClass::SkyClass (SoundEnvironmentClass *soundenvironment)
 	  WarBlitzHeading (0.0f),
 	  WarBlitzDistribution (0.5f)
 {
+	DiagLogClass::Log_Early("SkyClass: constructor entered");
 	const unsigned starcount = 200;
 
 	WWASSERT (soundenvironment != NULL);
 	REF_PTR_SET (SoundEnvironment, soundenvironment);
 	SoundEnvironment->Add_User();
+	DiagLogClass::Log_Early("SkyClass: SoundEnvironment set");
 
 	Haze = new HazeClass (Extent);
 	WWASSERT (Haze != NULL);
+	DiagLogClass::Log_Early("SkyClass: HazeClass created");
 
 	Starfield = new StarfieldClass (Extent, starcount);
 	WWASSERT (Starfield != NULL);
+	DiagLogClass::Log_Early("SkyClass: StarfieldClass created");
+	DiagLogClass::Log_Early("SkyClass: about to create Sun");
 
 	Sun = new SkyObjectClass (ShaderClass::_PresetAdditive2DShader);
 	WWASSERT (Sun != NULL);
 	Sun->Set_Texture ("Sun.tga");
 
+	DiagLogClass::Log_Early("SkyClass: Sun created");
 	SunHalo = new SkyObjectClass (ShaderClass::_PresetAdditive2DShader);
 	WWASSERT (SunHalo != NULL);
 	SunHalo->Set_Texture ("SunHalo.tga");
 
+	DiagLogClass::Log_Early("SkyClass: SunHalo created");
 	Moon = new SkyObjectClass (ShaderClass::_PresetAlpha2DShader);
 	WWASSERT (Moon != NULL);
 	Set_Moon_Type (MOON_TYPE_FULL);
 
+	DiagLogClass::Log_Early("SkyClass: Moon created");
 	MoonHalo = new SkyObjectClass (ShaderClass::_PresetAdditive2DShader);
 	WWASSERT (MoonHalo != NULL);
 	MoonHalo->Set_Texture ("MoonHalo.tga");
 
+	DiagLogClass::Log_Early("SkyClass: MoonHalo created");
 	CloudLayer0 = new CloudLayerClass (Extent, "CloudLayer.tga", Vector2 (0.0030f, 0.0006f), 1.2f, false);
 	WWASSERT (CloudLayer0 != NULL);
 
+	DiagLogClass::Log_Early("SkyClass: CloudLayer0 created");
 	CloudLayer1 = new CloudLayerClass (Extent, "CloudLayer.tga", Vector2 (0.0050f, 0.0010f), 0.8f, true);
 	WWASSERT (CloudLayer1 != NULL);
 
+	DiagLogClass::Log_Early("SkyClass: CloudLayer1 created");
 	for (unsigned l = 0; l < LIGHTNING_COUNT; l++) {
 		Lightning [l]			  = NULL;
 		LightningCountdown [l] = Lightning_Delay();
@@ -3121,15 +3151,18 @@ BackgroundMgrClass::BackgroundMgrClass()
  *=============================================================================================*/
 void BackgroundMgrClass::Init (SimpleSceneClass *renderscene, SoundEnvironmentClass *soundenvironment, bool render_available)
 {
+	DiagLogClass::Log_Early("BackgroundMgr::Init entered");
 	WWASSERT (renderscene != NULL);
 	WWASSERT (_Sky == NULL);
 	WWASSERT (_Dazzle == NULL);
 
 	if (render_available) {
 		_Sky = NEW_REF (SkyClass, (soundenvironment));
+	DiagLogClass::Log_Early("BackgroundMgr::Init SkyClass created");
 		renderscene->Add_Render_Object (_Sky);
 
 		_Dazzle = NEW_REF (DazzleRenderObjClass, ("SUN"));
+	DiagLogClass::Log_Early("BackgroundMgr::Init DazzleRenderObjClass created");
 		renderscene->Add_Render_Object (_Dazzle);
 	}
 	Reset();

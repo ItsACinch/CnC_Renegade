@@ -611,8 +611,11 @@ void Dump_Exception_Info(EXCEPTION_POINTERS *e_info)
 	Add_Txt(scrap);
 	sprintf(scrap, "    Data Selector: %08x\r\n", context->FloatSave.DataSelector);
 	Add_Txt(scrap);
+#if defined(_MSC_VER) && _MSC_VER < 1900
+	// Cr0NpxState was removed from _FLOATING_SAVE_AREA in modern Windows SDKs
 	sprintf(scrap, "      Cr0NpxState: %08x\r\n", context->FloatSave.Cr0NpxState);
 	Add_Txt(scrap);
+#endif
 
 	for (int fp=0 ; fp<SIZE_OF_80387_REGISTERS / 10 ; fp++) {
 		sprintf(scrap, "ST%d : ", fp);

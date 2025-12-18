@@ -36,6 +36,7 @@
 
 #include <Gamespy\gs_patch_usage.h>
 #include <Gamespy\gcdkeyserver.h>
+#include <time.h>
 #include "specialbuilds.h"
 #include "dlgcncteaminfo.h"
 #include "resource.h"

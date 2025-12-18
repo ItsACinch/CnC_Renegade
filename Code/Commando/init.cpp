@@ -832,7 +832,7 @@ bool Game_Init(void)
 	default:
 		WWDEBUG_SAY(("WW3D::Init Failed!\r\n"));
 		::MessageBox(NULL,
-			"DirectX 8.0 or later is required to play C&C:Renegade.",
+			"DirectX 9.0 or later is required to play C&C:Renegade.",
 			"Renegade Graphics Initialization Error.",
 			MB_OK);
 		return false;

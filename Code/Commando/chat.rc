@@ -8,7 +8,11 @@
 // Generated from the TEXTINCLUDE 2 resource.
 //
 #include "dialogresource.h"
-#include "afxres.h"
+#include <windows.h>
+// winres.h equivalent - define common resource constants if not using MFC
+#ifndef IDC_STATIC
+#define IDC_STATIC (-1)
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -2822,7 +2826,7 @@ FONT 8, "MS Sans Serif"
 BEGIN
     CONTROL         "",IDC_IMAGE_CTRL,"Static",SS_BITMAP | SS_CENTERIMAGE,0,
                     0,399,300
-    LTEXT           "%s©2002 Electronic Arts Inc. All rights reserved.  EA GAMES™ and Westwood Studios™ are Electronic Arts™ brands.",
+    LTEXT           "%sï¿½2002 Electronic Arts Inc. All rights reserved.  EA GAMESï¿½ and Westwood Studiosï¿½ are Electronic Artsï¿½ brands.",
                     IDC_STATIC,0,279,400,21
 END
 

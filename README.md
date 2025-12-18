@@ -11,15 +11,17 @@ The following proprietary SDKs have been replaced with open-source alternatives:
 - **RAD Bink SDK** - Replaced with FFmpeg (DLLs loaded at runtime)
 - **RAD Miles Sound System SDK** - Replaced with OpenAL Soft (DLLs loaded at runtime)
 
-The following libraries are still required for building tools or optional features:
-
-- DirectX SDK (Version 8.0 or higher) (expected path `\Code\DirectX\`)
+The following proprietary SDKs are no longer required
+- Umbra SDK - (expected path `\Code\Umbra\`)
 - NvDXTLib SDK - (expected path `\Code\NvDXTLib\`)
 - Lightscape SDK - (expected path `\Code\Lightscape\`)
-- Umbra SDK - (expected path `\Code\Umbra\`)
+- DirectX SDK (Version 9.0 or higher) (expected path `\Code\DirectX\`)
 - GameSpy SDK - (expected path `\Code\GameSpy\`)
 - GNU Regex - (expected path `\Code\WWLib\`)
 - SafeDisk API - (expected path `\Code\Launcher\SafeDisk\`)
+
+The following libraries are still required for building the installer or optional tools:
+
 - Microsoft Cab Archive Library - (expected path `\Code\Installer\Cab\`)
 - RTPatch Library - (expected path `\Code\Installer\`)
 - Java Runtime Headers - (expected path `\Code\Tools\RenegadeGR\`)
@@ -95,3 +97,4 @@ This repository is for preservation purposes only and is archived without suppor
 ## License
 
 This repository and its contents are licensed under the GPL v3 license, with additional terms applied. Please see [LICENSE.md](LICENSE.md) for details.
+

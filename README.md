@@ -6,11 +6,14 @@ This repository includes source code for Command & Conquer Renegade. This releas
 
 ## Dependencies
 
-If you wish to rebuild the source code and tools successfully you will need to find or write new replacements (or remove the code using them entirely) for the following libraries;
+The following proprietary SDKs have been replaced with open-source alternatives:
+
+- **RAD Bink SDK** - Replaced with FFmpeg (DLLs loaded at runtime)
+- **RAD Miles Sound System SDK** - Replaced with OpenAL Soft (DLLs loaded at runtime)
+
+The following libraries are still required for building tools or optional features:
 
 - DirectX SDK (Version 8.0 or higher) (expected path `\Code\DirectX\`)
-- RAD Bink SDK - (expected path `\Code\BinkMovie\`)
-- RAD Miles Sound System SDK - (expected path `\Code\Miles6\`)
 - NvDXTLib SDK - (expected path `\Code\NvDXTLib\`)
 - Lightscape SDK - (expected path `\Code\Lightscape\`)
 - Umbra SDK - (expected path `\Code\Umbra\`)
@@ -34,7 +37,36 @@ If you wish to compile the code under a modern version of Microsoft Visual Studi
 
 NOTE: As modern versions of MSVC enforce newer revisions of the C++ standard, you will need to make extensive changes to the codebase before it successfully compiles, even more so if you plan on compiling for the Win64 platform.
 
-When the workspace has finished building, the compiled binaries will be copied to the `/Run/` directory found in the root of this repository. 
+When the workspace has finished building, the compiled binaries will be copied to the `/Run/` directory found in the root of this repository.
+
+
+### Runtime Requirements
+
+**OpenAL Soft (Audio)**
+
+The game uses OpenAL Soft for audio playback. Download `soft_oal.dll` from [OpenAL Soft releases](https://openal-soft.org/openal-binaries/) and place it in the same directory as `Renegade.exe`. Rename it to `OpenAL32.dll` if needed.
+
+If the OpenAL DLL is not present, the game will run but without audio.
+
+**FFmpeg (Video)**
+
+The game uses FFmpeg for video playback (cutscenes, intro movies). FFmpeg replaces the proprietary RAD Bink Video SDK and can decode Bink video files (`.bik`) as well as many other formats.
+
+Download the shared FFmpeg libraries from one of these sources:
+- [Gyan.dev FFmpeg builds](https://www.gyan.dev/ffmpeg/builds/) - Windows builds (recommended: "shared" release build)
+- [BtbN FFmpeg builds](https://github.com/BtbN/FFmpeg-Builds/releases) - Cross-platform builds
+
+Extract and place the following DLLs in the same directory as `Renegade.exe`:
+- `avcodec-XX.dll` - Video/audio codec library
+- `avformat-XX.dll` - Container format handling
+- `avutil-XX.dll` - Utility functions
+- `swscale-XX.dll` - Video scaling/conversion
+
+Where XX is the FFmpeg major version number (e.g., 60, 61). The game automatically detects versions 55-61.
+
+**Note:** FFmpeg can decode original Bink (`.bik`) video files, so existing game videos will work without conversion. Alternatively, videos can be converted to other formats like MP4/H.264 for potentially better quality.
+
+If the FFmpeg DLLs are not present, the game will run but cutscenes and intro movies will be skipped.
 
 
 ### Free Dedicated Server

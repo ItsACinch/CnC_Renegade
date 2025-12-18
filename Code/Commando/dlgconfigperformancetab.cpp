@@ -281,12 +281,9 @@ DlgConfigPerformanceTabClass::Setup_Controls (void)
 	Enable_Dlg_Item (IDC_TEXTURE_FILTER, false);
 
 	//
-	//	Disable the checkbox if NPatches aren't supported
+	//	NPatches: D3D9 supports software tessellation via SetNPatchMode()
+	//	even when hardware N-Patches aren't available, so keep checkbox enabled
 	//
-	if (DX8Wrapper::Get_Current_Caps() && DX8Wrapper::Get_Current_Caps()->Support_NPatches () == false) {
-		Check_Dlg_Button (IDC_NPATCH_CHECK, false);
-		Enable_Dlg_Item (IDC_NPATCH_CHECK, false);
-	}
 
 	return ;
 }
@@ -616,9 +613,8 @@ DlgConfigPerformanceTabClass::On_Apply (void)
 		registry.Set_Int (VALUE_NAME_TEXTURE_RES,		max (2 - texture_red, 0));
 		registry.Set_Int (VALUE_NAME_PARTICLE_DETAIL, particle_detail);
 
-		if (DX8Wrapper::Get_Current_Caps() && DX8Wrapper::Get_Current_Caps()->Support_NPatches ()) {
-			registry.Set_Int (VALUE_NAME_NPATCHES,	npatches);
-		}
+		// D3D9 supports software tessellation via SetNPatchMode(), so always save setting
+		registry.Set_Int (VALUE_NAME_NPATCHES,	npatches);
 
 		//
 		//	Pass the values onto the game

@@ -859,10 +859,11 @@ void ShaderClass::Apply()
 	DX8Wrapper::Set_DX8_Render_State(D3DRS_CULLMODE,Get_Cull_Mode() ? _PolygonCullMode : D3DCULL_NONE);
 
 	// NPATCHES
+	// D3D9 uses SetNPatchMode() for software tessellation instead of D3DRS_PATCHSEGMENTS
 	if (diff&ShaderClass::MASK_NPATCHENABLE) {
 		float level=1.0f;
 		if (Get_NPatch_Enable()) level=float(WW3D::Get_NPatches_Level());
-		DX8Wrapper::Set_DX8_Render_State(D3DRS_PATCHSEGMENTS,*((DWORD*)&level));
+		DX8Wrapper::Set_NPatches_Mode(level);
 	}
 
 	// Enable/disable alpha test

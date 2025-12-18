@@ -269,6 +269,7 @@ public:
 	static void Set_DX8_Texture(unsigned int stage, IDirect3DBaseTexture8* texture);
 	static void Set_Light_Environment(LightEnvironmentClass* light_env);
 	static void Set_Fog(bool enable, const Vector3 &color, float start, float end);
+	static void Set_NPatches_Mode(float segments);
 
 	static WWINLINE const D3DLIGHT8& Peek_Light(unsigned index);
 	static WWINLINE bool Is_Light_Enabled(unsigned index);
@@ -1192,6 +1193,18 @@ WWINLINE RenderStateStruct::~RenderStateStruct()
 	for (unsigned i=0;i<MAX_TEXTURE_STAGES;++i) REF_PTR_RELEASE(Textures[i]);
 }
 
+
+/*
+** Set N-Patch tessellation mode for D3D9
+** D3D9 uses SetNPatchMode() instead of D3DRS_PATCHSEGMENTS render state
+** segments=1.0f disables N-Patches, higher values enable software tessellation
+*/
+WWINLINE void DX8Wrapper::Set_NPatches_Mode(float segments)
+{
+	// Safety check - don't call if device not initialized
+	if (!Is_Initted() || !_Get_D3D_Device8()) return;
+	DX8CALL(SetNPatchMode(segments));
+}
 
 WWINLINE RenderStateStruct& RenderStateStruct::operator= (const RenderStateStruct& src)
 {

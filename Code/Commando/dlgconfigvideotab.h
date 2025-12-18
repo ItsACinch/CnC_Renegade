@@ -45,7 +45,10 @@
 // Includes.
 #include "childdialog.h"
 #include "dx8wrapper.h"
+#include "vector.h"
 
+// Forward declarations
+class ComboBoxCtrlClass;
 
 // Defines.
 #define GAMMA_SLIDER_MIN				 60
@@ -84,6 +87,22 @@ public:
 	void On_Init_Dialog (void);
 	void On_Destroy (void);
 	void On_SliderCtrl_Pos_Changed (SliderCtrlClass *slider_ctrl, int ctrl_id, int new_pos);
+	void On_ComboBoxCtrl_Sel_Change (ComboBoxCtrlClass *combo_ctrl, int ctrl_id, int old_sel, int new_sel);
+
+	//
+	//	Settings file management
+	//
+	static bool Load_Pending_Settings(int &width, int &height, int &depth, int &windowed);
+	static bool Save_Pending_Settings(int width, int height, int depth, int windowed);
+	static bool Has_Pending_Settings(void);
+	static void Clear_Pending_Settings(void);
+	static const char* Get_Settings_Path(void);
+
+	//
+	//	Restart notification
+	//
+	static bool Needs_Restart(void) { return NeedsRestart; }
+	static void Clear_Needs_Restart(void) { NeedsRestart = false; }
 
 	//
 	//	Gamma adjustments
@@ -96,22 +115,35 @@ public:
 	static void	Set_Contrast (int level)		{ ContrastLevel = level; Update_Gamma();}
 
 protected:
-	
+
 	bool UpdateGamma;
 
 	///////////////////////////////////////////////////////////////////
 	//	Protected methods
-	///////////////////////////////////////////////////////////////////	
+	///////////////////////////////////////////////////////////////////
 	static float Gamma_Scale (int level);
 	static void  Update_Gamma();
 	static void	 Update_Gamma (int g, int b, int c);
-	
+	void Configure_Resolution_Combobox(void);
+	void Configure_BitDepth_Combobox(void);
+
 	///////////////////////////////////////////////////////////////////
 	//	Protected member data
 	///////////////////////////////////////////////////////////////////
 	static int GammaLevel;
 	static int BrightnessLevel;
 	static int ContrastLevel;
+	static bool NeedsRestart;
+
+	// Pending resolution settings (for restart)
+	int InitialWidth;
+	int InitialHeight;
+	int InitialDepth;
+	bool InitialWindowed;
+	int SelectedWidth;
+	int SelectedHeight;
+	int SelectedDepth;
+	bool SettingsChanged;
 };
 
 

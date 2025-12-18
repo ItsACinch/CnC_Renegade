@@ -74,6 +74,7 @@
 #include "devoptions.h"
 #include "translatedb.h"
 #include "useroptions.h"
+#include "dlgconfigvideotab.h"
 #include "pathmgr.h"
 #include "string_ids.h"
 #include "soundrobj.h"
@@ -844,9 +845,34 @@ bool Game_Init(void)
 		scene->Set_Max_Simultaneous_Shadows(0);
 		DazzleRenderObjClass::Enable_Dazzle_Rendering(false);
 	} else {
-		if ( WW3D::Registry_Load_Render_Device( APPLICATION_SUB_KEY_NAME_RENDER, true ) != WW3D_ERROR_OK ) {
-			WWDEBUG_SAY(("WW3D::Registry_Load_Render_Device Failed!\r\n"));
-			return false;
+		// Check for pending graphics settings from user config file
+		bool settings_applied = false;
+		if (DlgConfigVideoTabClass::Has_Pending_Settings()) {
+			int width, height, depth, windowed;
+			if (DlgConfigVideoTabClass::Load_Pending_Settings(width, height, depth, windowed)) {
+				WWDEBUG_SAY(("Applying pending graphics settings: %dx%d %d-bit\n", width, height, depth));
+
+				// First load from registry to get device name, then override with pending settings
+				if ( WW3D::Registry_Load_Render_Device( APPLICATION_SUB_KEY_NAME_RENDER, true ) == WW3D_ERROR_OK ) {
+					// Now apply the pending resolution using Set_Device_Resolution
+					if (WW3D::Set_Device_Resolution(width, height, depth, windowed, true) == WW3D_ERROR_OK) {
+						// Save the new settings to registry so they persist
+						WW3D::Registry_Save_Render_Device(APPLICATION_SUB_KEY_NAME_RENDER);
+						settings_applied = true;
+					}
+				}
+
+				// Clear the pending settings file now that we've processed them
+				DlgConfigVideoTabClass::Clear_Pending_Settings();
+			}
+		}
+
+		// If no pending settings or they failed, load from registry as normal
+		if (!settings_applied) {
+			if ( WW3D::Registry_Load_Render_Device( APPLICATION_SUB_KEY_NAME_RENDER, true ) != WW3D_ERROR_OK ) {
+				WWDEBUG_SAY(("WW3D::Registry_Load_Render_Device Failed!\r\n"));
+				return false;
+			}
 		}
 
 		if ( WW3D::Registry_Save_Render_Device( APPLICATION_SUB_KEY_NAME_RENDER ) != WW3D_ERROR_OK ) {
